@@ -25,6 +25,9 @@
 
 #include "bsp_exti.h"
 
+//init user led on board.
+#ifdef RT_USING_NUCLEOF401_USERLED
+
 //User LED on nucleo borad.
 #define LED_INIT()	{\
 RCC_CMD(PA_PER);\
@@ -33,20 +36,41 @@ PAOUT_INT(BIT5);\
 #define LED_ON()		PAOUT_SET(BIT5)
 #define LED_OFF()		PAOUT_CLR(BIT5)
 
+#else
+
+#define LED_INIT()	
+#define LED_ON()		
+#define LED_OFF()		
+
+#endif
+
+//init user button on board.
+#ifdef RT_USING_NUCLEOF401_USERBUTTON
 //User key on nucleo borad.
+//initialization steps.
+//1.cmd pc bus.
+//2.init pc_13 as input io.
+//3.cmd exti bus as syscfg.
+//4.init exti for pc13.
+//5.init nvic priory for EXTI15_10_IRQn.
 #define BUTTON_INIT()	{\
 RCC_CMD(PC_PER);\
 PCIN_INT(BIT13);\
+SYSCFG_ENABLE();\
+PCEXTI_INT(PIN13,EXTI_F);\
+NVIC_CMD(EXTI15_10_IRQn,2,2);\
 }
 #define BUTTON_STATUS()	PCIN_GET(BIT13)
 
+#else
+//User key on nucleo borad.
+#define BUTTON_INIT()	
+#define BUTTON_STATUS()	
+
+#endif
 void nucleo_borad_init(){
 		LED_INIT();
-		BUTTON_INIT();			//init gpio as input.
-		
-		SYSCFG_ENABLE();		//cmd exti bus as syscfg.
-		PCEXTI_INT(PIN13,EXTI_F);	//init exti for pc13.
-		NVIC_CMD(EXTI15_10_IRQn,2,2);	//init nvic priory for EXTI15_10_IRQn.
+		BUTTON_INIT();		
 
 }
 

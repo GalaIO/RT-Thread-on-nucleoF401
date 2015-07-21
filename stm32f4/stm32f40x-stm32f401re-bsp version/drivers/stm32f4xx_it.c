@@ -23,7 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
-#include <rtthread.h>
+#include "rtthread.h"
 #include "board.h"
 
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
@@ -205,6 +205,7 @@ void USART3_IRQHandler(void)
 #endif
 }
 
+#ifdef RT_USING_NUCLEOF401_USERBUTTON
 #include "bsp_gpio.h"
 #include "bsp_exti.h"
 extern	void button_keyDown_callback(void);
@@ -218,7 +219,7 @@ void EXTI15_10_IRQHandler(){
     /* leave interrupt */
     rt_interrupt_leave();
 }
-
+#endif
 /**
   * @}
   */
