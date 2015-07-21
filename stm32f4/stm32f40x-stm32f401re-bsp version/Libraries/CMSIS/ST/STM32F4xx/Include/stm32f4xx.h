@@ -136,6 +136,57 @@
 		#define HSE_VALUE    ((uint32_t)8000000) /*!< Value of the External oscillator in Hz */
 	#endif /* HSE_VALUE */
 #endif /* STM32F40_41xxx || STM32F427_437xx || STM32F429_439xx || STM32F401xx || STM32F411xE */
+
+
+/*
+ *
+ *add more SYSCLK AHB=HCLK APB1=PCLK1 APB2=PCLK2 macro description.
+ *
+**/
+#if defined(STM32F40_41xxx)  
+	
+	#define SYSCLK_HZ		((uint32_t)168000000)			
+	#define AHBCLK_HZ		((uint32_t)168000000)
+	#define HCLK_HZ			((uint32_t)168000000)
+	#define APB1CLK_HZ	((uint32_t)42000000)
+	#define PCLK1_HZ		((uint32_t)42000000)
+	#define APB2CLK_HZ	((uint32_t)84000000)
+	#define PCLK2_HZ		((uint32_t)84000000)
+	
+#elif defined(STM32F427_437xx)  || defined(STM32F429_439xx) || defined(STM32F446xx)
+	
+	#define SYSCLK_HZ		((uint32_t)180000000)			
+	#define AHBCLK_HZ		((uint32_t)180000000)
+	#define HCLK_HZ			((uint32_t)180000000)
+	#define APB1CLK_HZ	((uint32_t)45000000)
+	#define PCLK1_HZ		((uint32_t)45000000)
+	#define APB2CLK_HZ	((uint32_t)90000000)
+	#define PCLK2_HZ		((uint32_t)90000000)
+
+#elif defined(STM32F401xx) 
+	
+	#define SYSCLK_HZ		((uint32_t)84000000)			
+	#define AHBCLK_HZ		((uint32_t)84000000)
+	#define HCLK_HZ			((uint32_t)84000000)
+	#define APB1CLK_HZ	((uint32_t)42000000)
+	#define PCLK1_HZ		((uint32_t)42000000)
+	#define APB2CLK_HZ	((uint32_t)84000000)
+	#define PCLK2_HZ		((uint32_t)84000000)
+	
+#elif defined(STM32F411xE)
+	
+	#define SYSCLK_HZ		((uint32_t)100000000)			
+	#define AHBCLK_HZ		((uint32_t)100000000)
+	#define HCLK_HZ			((uint32_t)100000000)
+	#define APB1CLK_HZ	((uint32_t)50000000)
+	#define PCLK1_HZ		((uint32_t)50000000)
+	#define APB2CLK_HZ	((uint32_t)100000000)
+	#define PCLK2_HZ		((uint32_t)100000000)
+	
+#endif /* STM32F40_41xxx || STM32F427_437xx || STM32F429_439xx || STM32F401xx || STM32F411xE */
+
+
+
 /**
  * @brief In the following line adjust the External High Speed oscillator (HSE) Startup 
    Timeout value 
