@@ -59,7 +59,23 @@ void  SysTick_Configuration(void)
 	RCC_GetClocksFreq(&rcc_clocks);
 
 	cnts = (rt_uint32_t)rcc_clocks.HCLK_Frequency / RT_TICK_PER_SECOND;
-	rt_kprintf("the system clock %u Hz\n",(rt_uint32_t)rcc_clocks.HCLK_Frequency);
+	rt_kprintf("\r\n-------*****************---------\r\n"
+		"    the system clock: %u Hz\r\n"
+		"    the  AHB   clock: %u Hz\r\n"
+		"    the  APB1  clock: %u Hz\r\n"
+		"    the  APB2  clock: %u Hz\r\n"
+	  "-------*****************---------\r\n",
+		(rt_uint32_t)rcc_clocks.SYSCLK_Frequency,
+		(rt_uint32_t)rcc_clocks.HCLK_Frequency,
+		(rt_uint32_t)rcc_clocks.PCLK1_Frequency,
+		(rt_uint32_t)rcc_clocks.PCLK2_Frequency);
+	//check the macro configuration correct?
+	if((rt_uint32_t)rcc_clocks.SYSCLK_Frequency != SYSCLK_HZ 
+			&& (rt_uint32_t)rcc_clocks.PCLK1_Frequency != PCLK1_HZ
+			&& (rt_uint32_t)rcc_clocks.PCLK2_Frequency != PCLK2_HZ){
+			rt_kprintf("That's horrible ! Your configuration is wrong ,find it and trap it !!\r\n");
+			while(1);	
+	}
 	cnts = cnts / 8;
 
 	SysTick_Config(cnts);
