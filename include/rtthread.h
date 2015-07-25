@@ -378,6 +378,8 @@ rt_err_t rt_mq_control(rt_mq_t mq, rt_uint8_t cmd, void *arg);
  */
 rt_device_t rt_device_find(const char *name);
 
+//register to rt_object_device_list , rt_object_container.
+//when you register a device,then will init right now.
 rt_err_t rt_device_register(rt_device_t dev,
                             const char *name,
                             rt_uint16_t flags);

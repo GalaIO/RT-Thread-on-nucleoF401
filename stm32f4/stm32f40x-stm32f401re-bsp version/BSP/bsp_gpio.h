@@ -1,13 +1,44 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 12:21 PM
+ *	Description:
+ *			Re package STD-gpio lib.
+ *			-init a gpio funtion.
+ *				eg. init a io for output.
+ *								POUT_INT(GPIOA,BIT1);
+ *						init a io for input.
+ *								PIN_INT(GPIOA,BIT1);
+ *						init a io for AF-alertion function.
+ *								POUT_AF_INT(GPIOA,BIT2);
+ *						init a io for Analog funtion.
+ *								POUT_ADCIN_INT(GPIOA,BIT1);
+ *				-handler a gpio.
+ *					set PA1 out 1.
+ *						PAOUT_SET(BIT1) 
+ *					set PA1 out 0.                              
+ *						PAOUT_CLR(BIT1) 
+ *					toggle PA1 out 0.  
+ *						PAOUT_TOG(BIT1)
+ *					get PA1 out status.  		
+ *						PAOUT_GET(BIT1) 
+ *					get PA1 in status. 
+ *						PAIN_GET(BIT1)   
+ *
+**/
 #ifndef _HELLO_GPIO_H
 #define _HELLO_GPIO_H
 
 #include "bsp_user.h"
 
-extern void POUT_INT(GPIO_TypeDef* GPIOx,u16 BIT);
+//配置GPIO的输出功能。
+void POUT_INT(GPIO_TypeDef* GPIOx,u16 BIT);
 
-extern void PIN_INT(GPIO_TypeDef* GPIOx,u16 BIT);
+//配置GPIO的输入功能。
+void PIN_INT(GPIO_TypeDef* GPIOx,u16 BIT);
 
+//配置GPIO的复用功能。
+void POUT_AF_INT(GPIO_TypeDef* GPIOx,u16 BIT);
 
 //GPIO口的简写
 #define BIT0	   GPIO_Pin_0

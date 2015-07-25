@@ -177,11 +177,17 @@ typedef enum
 #endif /* STM32F40_41xxx */
 
 #if defined (STM32F401xx)
+#if defined (STM32F401xE)
+#define IS_FLASH_ADDRESS(ADDRESS) ((((ADDRESS) >= 0x08000000) && ((ADDRESS) <= 0x0807FFFF)) ||\
+                                   (((ADDRESS) >= 0x1FFF7800) && ((ADDRESS) <= 0x1FFF7A0F)))
+
+#else
 #define IS_FLASH_ADDRESS(ADDRESS) ((((ADDRESS) >= 0x08000000) && ((ADDRESS) <= 0x0803FFFF)) ||\
                                    (((ADDRESS) >= 0x1FFF7800) && ((ADDRESS) <= 0x1FFF7A0F)))
+#endif  /* STM32F401xE */
 #endif /* STM32F401xx */
 
-#if defined (STM32F411xE) || defined (STM32F446xx)
+#if defined (STM32F411xE) || defined (STM32F446xx) 
 #define IS_FLASH_ADDRESS(ADDRESS) ((((ADDRESS) >= 0x08000000) && ((ADDRESS) <= 0x0807FFFF)) ||\
                                    (((ADDRESS) >= 0x1FFF7800) && ((ADDRESS) <= 0x1FFF7A0F)))
 #endif /* STM32F411xE */

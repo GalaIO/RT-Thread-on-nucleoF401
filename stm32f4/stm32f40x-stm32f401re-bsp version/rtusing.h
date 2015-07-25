@@ -1,6 +1,6 @@
 /*
  *******************************************************************
- *							RT_USED
+ *							RT_USING
  *******************************************************************
  *
  *Author:				GalaIO
@@ -8,10 +8,42 @@
  *Description:	-add THREAD_CHECK_STARTUP and THREAD_STARTUP for user tools.
  *							-fix THREAD_STACK_ALLOC using a RT_ALIEN to alien 4 byte for ARM.
  *
+ * *
+ *Author:				GalaIO
+ *Date:					2015-7-15 8:13 PM
+ *Description:	-add a new macro for init the sepcial board and resources on it.
+ *							
+ *
  *
 **/
 #ifndef _RTUSING_H_
 #define _RTUSING_H_
+
+///
+///
+////target board.
+///
+///
+#ifndef RT_USING_NUCLEOF401
+
+#define RT_USING_NUCLEOF401
+//
+/////resources on board.
+//
+#define RT_USING_NUCLEOF401_USERLED
+#define RT_USING_NUCLEOF401_USERBUTTON
+
+//RTC  Real-Time-Clock
+#define RT_USING_NUCLEOF401_RTC
+#define RT_USING_NUCLEOF401_TIM2
+#define RT_USING_NUCLEOF401_TIM2_PWM
+#define RT_USING_NUCLEOF401_TIM3
+#define RT_USING_NUCLEOF401_TIM3_PWM
+//using ADC and inter-TEMP
+#define RT_USING_NUCLEOF401_ADC_TEMP
+#define RT_USING_NUCLEOF401_FLASH
+#endif
+
 
 #ifndef RT_USING_TIMER_SOFT
 /*
@@ -124,7 +156,7 @@
 /* SECTION: Console options */
 #define RT_USING_CONSOLE
 /* the buffer size of console*/
-#define RT_CONSOLEBUF_SIZE	128
+#define RT_CONSOLEBUF_SIZE	512  //more room more better.
 // <o> Console on USART: <0=> no console <1=>USART 1 <2=>USART 2 <3=> USART 3
 // 	<i>Default: 1
 #define STM32_CONSOLE_USART		2			//nucleo connected usart2 for debug.

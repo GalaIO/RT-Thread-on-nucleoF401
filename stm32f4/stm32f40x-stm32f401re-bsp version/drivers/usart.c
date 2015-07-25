@@ -74,34 +74,34 @@ struct rt_device uart3_device;
 //#define USART3_DR_Base  0x40004804
 
 /* USART1_REMAP = 0 */
-#define UART1_GPIO_TX		GPIO_Pin_9
-#define UART1_TX_PIN_SOURCE GPIO_PinSource9
-#define UART1_GPIO_RX		GPIO_Pin_10
-#define UART1_RX_PIN_SOURCE GPIO_PinSource10
-#define UART1_GPIO			GPIOA
-#define UART1_GPIO_RCC      RCC_AHB1Periph_GPIOA
-#define RCC_APBPeriph_UART1	RCC_APB2Periph_USART1
-#define UART1_TX_DMA		DMA1_Channel4
-#define UART1_RX_DMA		DMA1_Channel5
+#define UART1_GPIO_TX					GPIO_Pin_9
+#define UART1_TX_PIN_SOURCE 	GPIO_PinSource9
+#define UART1_GPIO_RX					GPIO_Pin_10
+#define UART1_RX_PIN_SOURCE 	GPIO_PinSource10
+#define UART1_GPIO						GPIOA
+#define UART1_GPIO_RCC      	RCC_AHB1Periph_GPIOA
+#define RCC_APBPeriph_UART1		RCC_APB2Periph_USART1
+#define UART1_TX_DMA					DMA1_Channel4
+#define UART1_RX_DMA					DMA1_Channel5
 
-#define UART2_GPIO_TX	    GPIO_Pin_2
-#define UART2_TX_PIN_SOURCE GPIO_PinSource2
-#define UART2_GPIO_RX	    GPIO_Pin_3
-#define UART2_RX_PIN_SOURCE GPIO_PinSource3
-#define UART2_GPIO	    	GPIOA
-#define UART2_GPIO_RCC   	RCC_AHB1Periph_GPIOA
-#define RCC_APBPeriph_UART2	RCC_APB1Periph_USART2
+#define UART2_GPIO_TX	    		GPIO_Pin_2
+#define UART2_TX_PIN_SOURCE 	GPIO_PinSource2
+#define UART2_GPIO_RX	    		GPIO_Pin_3
+#define UART2_RX_PIN_SOURCE 	GPIO_PinSource3
+#define UART2_GPIO	    			GPIOA
+#define UART2_GPIO_RCC   			RCC_AHB1Periph_GPIOA
+#define RCC_APBPeriph_UART2		RCC_APB1Periph_USART2
 
 /* USART3_REMAP[1:0] = 00 */
-#define UART3_GPIO_TX		GPIO_Pin_10
+#define UART3_GPIO_TX				GPIO_Pin_10
 #define UART3_TX_PIN_SOURCE GPIO_PinSource10
-#define UART3_GPIO_RX		GPIO_Pin_11
+#define UART3_GPIO_RX				GPIO_Pin_11
 #define UART3_RX_PIN_SOURCE GPIO_PinSource11
-#define UART3_GPIO			GPIOB
-#define UART3_GPIO_RCC   	RCC_AHB1Periph_GPIOB
+#define UART3_GPIO					GPIOB
+#define UART3_GPIO_RCC   		RCC_AHB1Periph_GPIOB
 #define RCC_APBPeriph_UART3	RCC_APB1Periph_USART3
-#define UART3_TX_DMA		DMA1_Stream1
-#define UART3_RX_DMA		DMA1_Stream3
+#define UART3_TX_DMA				DMA1_Stream1
+#define UART3_RX_DMA				DMA1_Stream3
 
 static void RCC_Configuration(void)
 {

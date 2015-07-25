@@ -58,16 +58,16 @@
 
 extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Clock) */
 #if defined(STM32F40_41xxx)	/* STM32F40_41xxx */
-#define STM32F4_SYSTEM_FREQUENCE() 	 168000000
+#define STM32F4_SYSTEM_FREQUENCE() 	 SYSCLK_HZ
 
 #elif defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F446xx)
-#define STM32F4_SYSTEM_FREQUENCE() 	 180000000
+#define STM32F4_SYSTEM_FREQUENCE() 	 SYSCLK_HZ
 	
 #elif defined(STM32F401xx)
-#define STM32F4_SYSTEM_FREQUENCE() 	 84000000
+#define STM32F4_SYSTEM_FREQUENCE() 	 SYSCLK_HZ
 
 #elif defined(STM32F411xE)
-#define STM32F4_SYSTEM_FREQUENCE() 	 100000000
+#define STM32F4_SYSTEM_FREQUENCE() 	 SYSCLK_HZ
 
 #else
 #define STM32F4_SYSTEM_FREQUENCE() 	 8000000

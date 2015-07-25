@@ -365,7 +365,7 @@
             <v6LangP>0</v6LangP>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F401xx</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F401xx,STM32F401xE</Define>
               <Undefine></Undefine>
               <IncludePath>.;..\..\components\finsh;..\..\include;..\..\libcpu\arm\common;..\..\libcpu\arm\cortex-m4;Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;Libraries\CMSIS\Include;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\STM32F4xx_StdPeriph_Driver\inc;applications;drivers;.\BSP</IncludePath>
             </VariousControls>
@@ -456,11 +456,6 @@
               <FilePath>.\rtuser.h</FilePath>
             </File>
             <File>
-              <FileName>rtusing.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\rtusing.h</FilePath>
-            </File>
-            <File>
               <FileName>board.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\drivers\board.h</FilePath>
@@ -469,6 +464,11 @@
               <FileName>stm32f4xx_conf.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\drivers\stm32f4xx_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>rtusing.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\rtusing.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -640,6 +640,11 @@
         <Group>
           <GroupName>Kernel</GroupName>
           <Files>
+            <File>
+              <FileName>rtusing.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\rtusing.h</FilePath>
+            </File>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
@@ -839,6 +844,56 @@
               <FileName>bsp_exti.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\BSP\bsp_exti.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_fifo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_fifo.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_rtc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_rtc.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_adc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_adc.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_flash.h</FilePath>
             </File>
           </Files>
         </Group>

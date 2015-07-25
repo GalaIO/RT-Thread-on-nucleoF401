@@ -324,6 +324,7 @@ void rt_hw_serial_isr(rt_device_t device)
 
 			/* disable interrupt */
 			level = rt_hw_interrupt_disable();
+			//critical code area.
 
 			/* save character */
 			uart->int_rx->rx_buffer[uart->int_rx->save_index] = uart->uart_device->DR & 0xff;

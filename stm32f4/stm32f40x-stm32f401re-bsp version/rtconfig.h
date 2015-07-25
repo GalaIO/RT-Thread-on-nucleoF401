@@ -39,4 +39,8 @@
 #define RT_TIMER_TICK_PER_SECOND	10*/
 #endif
 
+/* open RT_DEBUG for RT-Thread*/
+#ifndef RT_DEBUG
+#define RT_DEBUG
+#endif
 #endif

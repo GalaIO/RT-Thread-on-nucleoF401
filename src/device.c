@@ -25,6 +25,17 @@
  *                             provided by Rob <rdent@iinet.net.au>
  * 2012-12-25     Bernard      return RT_EOK if the device interface not exist.
  * 2013-07-09     Grissiom     add ref_count support
+ *
+ *
+ *
+ *	Author:		GalaIO
+ *	Date:			2015-7-21 8:46 PM
+ *	Description:
+ *			-rt_device_register:	register to rt_object_device_list , rt_object_container.
+ *														when you register a device,then will init right now.
+ *
+ *
+ *
  */
 
 #include <rtthread.h>
@@ -49,7 +60,7 @@ rt_err_t rt_device_register(rt_device_t dev,
 
     if (rt_device_find(name) != RT_NULL)
         return -RT_ERROR;
-
+		//when you register a device,then will init right now.
     rt_object_init(&(dev->parent), RT_Object_Class_Device, name);
     dev->flag = flags;
     dev->ref_count = 0;

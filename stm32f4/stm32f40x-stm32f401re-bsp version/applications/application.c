@@ -23,62 +23,13 @@
 
 #include "finsh.h"
 
-#include "bsp_exti.h"
-
-//init user led on board.
-#ifdef RT_USING_NUCLEOF401_USERLED
-
-//User LED on nucleo borad.
-#define LED_INIT()	{\
-RCC_CMD(PA_PER);\
-PAOUT_INT(BIT5);\
-}
-#define LED_ON()		PAOUT_SET(BIT5)
-#define LED_OFF()		PAOUT_CLR(BIT5)
-
-#else
-
-#define LED_INIT()	
-#define LED_ON()		
-#define LED_OFF()		
-
-#endif
-
-//init user button on board.
-#ifdef RT_USING_NUCLEOF401_USERBUTTON
-//User key on nucleo borad.
-//initialization steps.
-//1.cmd pc bus.
-//2.init pc_13 as input io.
-//3.cmd exti bus as syscfg.
-//4.init exti for pc13.
-//5.init nvic priory for EXTI15_10_IRQn.
-#define BUTTON_INIT()	{\
-RCC_CMD(PC_PER);\
-PCIN_INT(BIT13);\
-SYSCFG_ENABLE();\
-PCEXTI_INT(PIN13,EXTI_F);\
-NVIC_CMD(EXTI15_10_IRQn,2,2);\
-}
-#define BUTTON_STATUS()	PCIN_GET(BIT13)
-
-#else
-//User key on nucleo borad.
-#define BUTTON_INIT()	
-#define BUTTON_STATUS()	
-
-#endif
-void nucleo_borad_init(){
-		LED_INIT();
-		BUTTON_INIT();		
-
-}
+#include "board.h"
 
 void button_keyDown_callback(){
 		rt_kprintf("the button is keyDown!!!\n");
 }
 
-static rt_bool_t LED_TOGGLE_ON =1;
+static rt_bool_t LED_TOGGLE_ON = 0;
 THREAD_STACK_ALLOC(led_stack,256);
 THREAD_TCB_ALLOC(led_thread);
 static void rt_thread_entry_led1(void* parameter)
@@ -134,6 +85,70 @@ int button_status(void){
 }
 #ifdef RT_USING_FINSH
 	FINSH_FUNCTION_EXPORT(button_status,query button status);
+#endif
+
+#ifdef RT_USING_NUCLEOF401_RTC
+void Date_print(void){
+	RTC_GET();
+	rt_kprintf("\r\nDate is :%d/%d/%d  %s\r\n"
+	"Time is :%d-%d-%d  %d\r\n",
+	RTC_YEAR(),RTC_MON(),RTC_DAY(),RTC_WEEKSTR(),
+	RTC_HOUR(),RTC_MIN(),RTC_SEC(),RTC_SUB_SEC());
+}
+#ifdef RT_USING_FINSH
+	FINSH_FUNCTION_EXPORT(Date_print,printf date and Time);
+#endif
+
+void Date_set(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec){
+	if(RTC_SET(year,month,day,hour,min,sec) == 0){
+		rt_kprintf("\r\nsync ok!!\r\n");
+	}else{
+		rt_kprintf("\r\nsync erreo!!\r\n");
+	}
+}
+#ifdef RT_USING_FINSH
+	FINSH_FUNCTION_EXPORT(Date_set,sync date and Time);
+#endif
+#endif
+
+
+#ifdef RT_USING_NUCLEOF401_ADC_TEMP
+void Temp_get(void){
+		rt_kprintf("now the cpu inter-tempture is %d C\r\n",(uint16_t)(Get_Temprate()*100));
+}
+#ifdef RT_USING_FINSH
+	FINSH_FUNCTION_EXPORT(Temp_get,sync date and Time);
+#endif
+#endif
+
+#ifdef RT_USING_NUCLEOF401_FLASH
+
+typedef struct {
+	char temp_str[5*4];
+	int  temp_int[2];
+}flash_test_t;
+
+flash_test_t *flash_test = (flash_test_t *)FLASH_STORAGE_START();
+
+void Flash_writeStr(const char *str){
+	if(BSPFLASH_WRITEWORDS(&(flash_test->temp_str[0]),str,sizeof(flash_test->temp_str))){
+		rt_kprintf("error write Flash!!\r\n");
+	}else{
+		rt_kprintf("ok write Flash!!\r\n");
+	}
+}
+#ifdef RT_USING_FINSH
+	FINSH_FUNCTION_EXPORT(Flash_writeStr,write a max str[20] toflash );
+#endif
+
+void Flash_readCH(){
+		rt_kprintf("read from Flash %c %c !!\r\n",
+			BSPFLASH_READWORD(&(flash_test->temp_str[0])),BSPFLASH_READWORD(&(flash_test->temp_str[2])));
+}
+#ifdef RT_USING_FINSH
+	FINSH_FUNCTION_EXPORT(Flash_readCH,read str[0] str[2] for you);
+#endif
+
 #endif
 
 

@@ -1,6 +1,6 @@
 
-#ifndef _HELLO_STM32_H
-#define _HELLO_STM32_H
+#ifndef _BSP_SYS_H
+#define _BSP_SYS_H
 
 #include "bsp_user.h"
 

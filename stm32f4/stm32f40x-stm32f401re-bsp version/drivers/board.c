@@ -12,8 +12,34 @@
  * 2009-01-05     Bernard      first implementation
  */
 
-#include <rthw.h>
-#include <rtthread.h>
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-21 8:46 PM
+ *	Description:
+ *		Arduino interface:
+ *
+ *																													D15		PB8  -10-	I2C1_SCL//,TIM4_CH3
+ *																													D14		PB9	 -9-	I2C1_SDA//,TIM4_CH4
+ *																						   								 AVDD  -8-
+ *			-1-  NC																	 								 GND	 -7-
+ *			-2-  IOREF																					D13		PA5	 -6-  SPI1_SCK//,TIM2_CH1,ADC1_IN5
+ *			-3-  RESET																					D12		PA6  -5-	SPI1_MISO//,TIM3_CH1,ADC1_IN6
+ *			-4-  +3V3																						D11		PA7  -4-	SPI1_MOSI//,TIM1_CH1N,TIM3_CH2,ADC1_IN7
+ *			-5-  +5V																						D10		PB6  -3-	SPI1_CS//,TIM4_CH1
+ *			-6-  GND																						D9		PC7	 -2-	TIM3_CH2//
+ *			-7-  GND																						D8		PA9	 -1-	USART1_TX//,TIM1_CH2
+ *			-8-  VIN
+ *																													D7		PA8  -8-	//TIM1_CH1
+ *			-1-  PA0	A0	TIM2_CH1//,TM5_CH1,ADC1_IN0,WKUP			D6	 PB10	 -7-	SPI3_CS|TIM2_CH3
+ *			-2-  PA1	A1	TIM2_CH2//,TIM5_CH2,ADC1_IN1					D5		PB4  -6-	SPI3_MISO|TIM3_CH1
+ *			-3-	 PA4	A2	ADC1_IN4//														D4		PB5  -5-	SPI3_MOSI|TIM3_CH2
+ *			-4-  PB0	A3	TIM3_CH3//,TIM1_CH2N,ADC1_IN8					D3		PB3  -4-	SPI3_SCK|TIM2_CH2
+ *			-5-  PC1	A4	ADC1_IN11//														D2	 PA10  -3-	USART1_RX//,TIM1_CH3
+ *      -6-	 PC0	A5	ADC1_IN10//														D1		PA2	 -2-  USART2_TX//,TIM2_CH3,TIM5_CH3,ADC1_IN2
+ *																													D0	  PA3  -1-  USART2_RX//,TIM2_CH4,TIM5_CH4,ADC1_IN3
+ *
+**/
+
 
 #include "stm32f4xx.h"
 #include "board.h"
@@ -22,7 +48,33 @@
  * @addtogroup STM32
  */
 
-/*@{*/
+
+void nucleo_borad_init(){
+		
+#ifdef RT_USING_NUCLEOF401_RTC
+		//start RTC.
+		RTC_START();
+#endif
+	
+		LED_INIT();
+		BUTTON_INIT();		
+
+#ifdef RT_USING_NUCLEOF401_TIM2
+		//init TIM2 update.
+		TIM2_START_US(1000);
+	
+#ifdef RT_USING_NUCLEOF401_TIM2_PWM	
+		//init PA0 PWM
+		TIM2_PWM_PA0(500);
+		TIM2_PWM_PA1(500);
+#endif
+	
+#ifdef RT_USING_NUCLEOF401_ADC_TEMP
+	ADC_INERTEMP_INIT();
+#endif
+	
+#endif
+}
 
 /*******************************************************************************
 * Function Name  : NVIC_Configuration
@@ -100,7 +152,6 @@ void SysTick_Handler(void)
 /**
  * This function will initial STM32 board.
  */
-extern void nucleo_borad_init(void);
 void rt_hw_board_init()
 {
 	/* NVIC Configuration */
@@ -111,10 +162,11 @@ void rt_hw_board_init()
 	rt_console_set_device(CONSOLE_DEVICE);
 #endif
 
+	nucleo_borad_init();
+	
 	/* Configure the SysTick */
 	SysTick_Configuration();
 	
-	nucleo_borad_init();
 }
 
 /*@}*/

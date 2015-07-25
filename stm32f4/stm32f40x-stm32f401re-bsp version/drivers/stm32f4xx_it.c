@@ -220,6 +220,65 @@ void EXTI15_10_IRQHandler(){
     rt_interrupt_leave();
 }
 #endif
+
+#include "bsp_timer.h"
+#include "board.h"
+/*******************************************************************************
+* Function Name  : TIM2_IRQHandler
+* Description    : This function handles TIM2 global interrupt request.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+#ifdef RT_USING_NUCLEOF401_TIM2
+void TIM2_IRQHandler(void)
+{	
+	static u16 count=0;
+  /* enter interrupt */
+  rt_interrupt_enter();
+	if(isTIM2_IT_UPDATE()){
+			clrTIM2_IT_UPDATE();
+			if(count>1000){
+				LED_TOG();
+				count = 0;
+			}else{
+					count++;
+			}
+	}
+  /* leave interrupt */
+  rt_interrupt_leave();
+}
+#endif
+
+/*******************************************************************************
+* Function Name  : TIM3_IRQHandler
+* Description    : This function handles TIM3 global interrupt request.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+#ifdef RT_USING_NUCLEOF401_TIM3
+void TIM3_IRQHandler(void)
+{
+	static u16 count=0;
+  /* enter interrupt */
+  rt_interrupt_enter();
+	if(isTIM3_IT_UPDATE()){
+			clrTIM3_IT_UPDATE();
+			if(count>1000){
+					rt_kprintf("\r\nTIM3 1s is arive.\r\n");
+					count = 0;
+			}else{
+					count++;
+			}
+	}
+  /* leave interrupt */
+  rt_interrupt_leave();
+}
+#endif
+
+
+
 /**
   * @}
   */

@@ -4,10 +4,27 @@
 #define _BSP_USER_H
 
 #include "stm32f4xx_conf.h"
+#include "stm32f4xx.h"
+#include "bsp_sys.h"
 
 //使能各中断 并添加响应优先级
 //NVIC 的配置F1系列 与F4 相同
 extern void NVIC_CMD(u8 channel,u8 pre,u8 sub);
+
+//全局NVIC 优先级定义.
+#define  TOP_PREEMPTION				0			//最高抢占优先级
+#define  HIGH_PREEMPTION			1			//高抢占优先级
+#define  GENERAL_PREEMPTION		2			//通用抢占级别
+#define  NORMAL_PREEMPTION		3			//一般低效非实时任务抢占级别
+
+#define  TOP_PRIORITY					0			//最高优先级
+#define  HIGH_PRIORITY				1			//高优先级
+#define  GENERAL_PRIORITY			2			//通用级别
+#define  NORMAL_PRIORITY			3			//一般低效非实时任务级别
+
+//全局快速配置NVIC 宏
+#define NORMAL_NVIC_CMD(channel)			NVIC_CMD(channel,NORMAL_PREEMPTION,NORMAL_PRIORITY);
+#define GENERAL_NVIC_CMD(channel)		NVIC_CMD(channel,GENERAL_PREEMPTION,GENERAL_PRIORITY);
 
  //不会编译
 #if 0
@@ -91,9 +108,8 @@ extern void NVIC_CMD(u8 channel,u8 pre,u8 sub);
 #endif
 
 /*
-  GPIO的总线时钟设置地址
+  GPIO的总线时钟设置地址 挂接到告诉 AHB1
 */
-#define AF_PER			 RCC_AHB1Periph_AFIO	 //AFIO
 #define PA_PER			 RCC_AHB1Periph_GPIOA
 #define PB_PER			 RCC_AHB1Periph_GPIOB
 #define PC_PER			 RCC_AHB1Periph_GPIOC
@@ -103,7 +119,7 @@ extern void NVIC_CMD(u8 channel,u8 pre,u8 sub);
 #define PG_PER			 RCC_AHB1Periph_GPIOG
 
 /*
-  使能设备时钟简化宏
+  使能设备时钟简化宏 使用的是告诉AHB1
 */
 #define RCC_CMD(per)	(RCC_AHB1PeriphClockCmd((per), ENABLE))
 #define RCC_DIS(per)	(RCC_AHB1PeriphClockCmd((per), DISABLE))
