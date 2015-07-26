@@ -1,5 +1,56 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			Re package RTC configuration.
+ *			-Define the week description macro.
+ *					MONDAY		0
+ *						  ....
+ *					SUNDAY		6
+ *			-init the RTC with Bak_Date_Time[] = {2015,7,23,1,55,00}.
+ *				Init_RTC(void)
+ *			-update RTC as the specific year month day hour minute second.
+ *				Time_Update(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec)
+ *			-refresh the time for rtc_timer in sram.
+ *				Time_Get(void)
+ *			-handler timer and date tools.
+ *				-check date param, correct return 0, erro return 1.
+ *					Check_Date(uint16_t year,uint8_t month,uint8_t day)
+ *				-check time param, correct return 0, erro return 1.
+ *					Check_Time(uint8_t hour,uint8_t min,uint8_t sec)
+ *				-get week info.
+ *					RTC_Get_Week(uint16_t year,uint16_t month,uint16_t day)
+ *				-judge a leap year.
+ *					Is_Leap_Year(u16 year)
+ *		
+**/
 #include "bsp_rtc.h"
+
+/*
+ *  define and declare.
+**/
+Date_t  rtc_timer;  //定义一个时间结构体变量
+//得到Date_t的两个父类，一个叫RTC_TimeTypeDef；另一个是RTC_DateTypeDef。
+#define RTC_GET_DATETYPE()	((RTC_DateTypeDef *)&(rtc_timer.week))
+#define RTC_GET_TIMETYPE()	((RTC_TimeTypeDef *)&(rtc_timer.hour))
+
+//检查输入时间和日期的参数，分开，注意我们默认是24小时制哦
+//输出0，正确；输出1，错误。
+uint8_t Check_Date(uint16_t year,uint8_t month,uint8_t day);
+
+uint8_t Check_Time(uint8_t hour,uint8_t min,uint8_t sec);
+
+//获得现在是星期几
+//功能描述:输入公历日期得到星期(只允许2000-2099年)
+//输入参数：公历年月日 
+//返回值：星期号																						 
+uint8_t RTC_Get_Week(uint16_t year,uint16_t month,uint16_t day);
+//判断是否是闰年函数
+//输入:年份
+//输出:该年份是不是闰年.1,是.0,不是
+u8 Is_Leap_Year(u16 year);
+
 
 //月份   1  2  3  4  5  6  7  8  9  10 11 12  total
 //闰年   31 29 31 30 31 30 31 31 30 31 30 31	 366
@@ -12,7 +63,7 @@ const int8_t	Day_INC_bMon[] = 			{0,1,-1,0,0,1,1,2,3,3,4,4,5};
 const int8_t	Day_INC_bMon_Leap[] = {0,1, 0,1,1,2,2,3,4,4,5,5,6};	  
 
 const uint8_t Month_Table[] = 			{0,31,28,31,30,31,30,31,31,30,31,30,31};	//平年的月份日期表
-const uint8_t Month_Table_Leap[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};		//平年的月份日期表
+const uint8_t Month_Table_Leap[] =  {0,31,29,31,30,31,30,31,31,30,31,30,31};		//闰年的月份日期表
 
 //以2000年1月1日星期6为基准来识别星期。同时只支持从2000-2099年的日期，
 //修改基准日期能改变日期，但只能数100年（RTC限制的）。
@@ -22,7 +73,7 @@ const uint16_t Date_Benchmark[] = {2000,1,1,SATURDAY};
 const uint16_t Bak_Date_Time[] = {2015,7,23,1,55,00};
 
 const char DATE_WEEK_STR[][10] = {"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"};
-Date_t  rtc_timer;  //定义一个时间结构体变量
+
 
 /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ** 函数名称: Init_RTC

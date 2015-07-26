@@ -1,4 +1,16 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			define the delay call.
+ *			-delay count ms , and do nothing in the meanwhile.
+ *				delayMS(int count)
+ *			-delay count us , and do nothing in the meanwhile.
+ *				delayUS(int count)
+ *			-code the nvic configuration , but declare in bsp_user.h.
+ *				NVIC_CMD(u8 channel,u8 pre,u8 sub)
+**/
 #include "bsp_sys.h"
 
 

@@ -1,4 +1,16 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			Re package TIM and TIM_PWM configuration.
+ *			-init a TIMx with period and Prescaler param.
+ *				TIM_INIT(TIM_TypeDef *TIMx,uint32_t per,uint32_t pre)
+ *			-launch a TIMx_PWM_channel whit the duty.
+ *			  TIM_PWM_INIT(TIM_TypeDef *TIMx,uint8_t channel,uint32_t duty)
+ *
+ *
+**/
 #include "bsp_timer.h"
 
 

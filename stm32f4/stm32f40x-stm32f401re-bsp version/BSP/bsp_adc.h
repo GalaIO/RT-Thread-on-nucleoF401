@@ -1,9 +1,24 @@
+
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			Re package ADC configuration.
+ *			-initiallize the ADC1 ,in STM32F401XE only one ADC,ADC has 17 channel the 16 channel is temp channel.
+ *				ADC_INERTEMP_INIT(void)
+ *			-get the specific channel value in ADC1.
+ *				Get_Adc(uint8_t ch)
+ *			-get a filtered data.
+ *				Get_Adc_Average(uint8_t ch,uint8_t times)
+ *			-get ADC1 iner-temperature.
+ *				Get_Temprate(void)
+ *		
+**/
 #ifndef _BSP_ADC_H_
 #define _BSP_ADC_H_	
 
 #include "bsp_user.h"
-	
-#define ADC_CH5  		5 		 	//通道5	   	    
+	  	    
 	   									   
 //初始化ADC
 //这里我们仅以规则通道为例

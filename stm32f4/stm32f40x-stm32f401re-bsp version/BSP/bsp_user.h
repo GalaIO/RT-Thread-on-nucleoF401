@@ -1,4 +1,19 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			Re package NVIC configuration.
+ *			-configurate a NVIC priority with the interrupt channel.
+ *				NVIC_CMD(u8 channel,u8 pre,u8 sub)
+ *			-quick macro for config NVIC.
+ *				NORMAL_NVIC_CMD(channel)
+ *				GENERAL_NVIC_CMD(channel)
+ *			-simplify macro for Px_PER.
+ *			-quick macro for Px_PER mount to AHB1.
+ *				RCC_CMD(per)
+ *				RCC_DIS(per)
+**/
 #ifndef _BSP_USER_H
 
 #define _BSP_USER_H
@@ -24,7 +39,7 @@ extern void NVIC_CMD(u8 channel,u8 pre,u8 sub);
 
 //全局快速配置NVIC 宏
 #define NORMAL_NVIC_CMD(channel)			NVIC_CMD(channel,NORMAL_PREEMPTION,NORMAL_PRIORITY);
-#define GENERAL_NVIC_CMD(channel)		NVIC_CMD(channel,GENERAL_PREEMPTION,GENERAL_PRIORITY);
+#define GENERAL_NVIC_CMD(channel)			NVIC_CMD(channel,GENERAL_PREEMPTION,GENERAL_PRIORITY);
 
  //不会编译
 #if 0

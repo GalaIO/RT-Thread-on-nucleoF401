@@ -18,7 +18,7 @@
  *						PAOUT_SET(BIT1) 
  *					set PA1 out 0.                              
  *						PAOUT_CLR(BIT1) 
- *					toggle PA1 out 0.  
+ *					toggle PA1 out status.  
  *						PAOUT_TOG(BIT1)
  *					get PA1 out status.  		
  *						PAOUT_GET(BIT1) 

@@ -1,4 +1,12 @@
-
+/*
+*	Author: 		laoguo
+*   Date:   		2014-11-16-14:04
+*	Deline:			Fifo_Auto 的宏函数和c函数 混编版本   修改指针版本 
+*	Version:		1.2.0
+*   Description: 	Auto Fifo的作用  区别于平时的循环队列的作用是 她不仅可以
+*					寻常的循环队列一样 入队 出队，同时保护原有数据，当队列满时，不能入队
+*					而Auto Fifo在队列满时 也可以入队，不过会丢掉一些数据，在队列时间越长 越容易被丢弃 
+*/
 #include "bsp_fifo.h"
 
 char FIFO_OUT(FIFO_ptr fifo)  {

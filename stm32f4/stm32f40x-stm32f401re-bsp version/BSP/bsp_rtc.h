@@ -1,4 +1,32 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			Re package RTC configuration.
+ *			-Define the week description macro.
+ *					MONDAY		0
+ *						  ....
+ *					SUNDAY		6
+ *			-init the RTC with Bak_Date_Time[] = {2015,7,23,1,55,00}.
+ *				Init_RTC(void)
+ *			-update RTC as the specific year month day hour minute second.
+ *				Time_Update(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec)
+ *			-refresh the time for rtc_timer in sram.
+ *				Time_Get(void)
+ *			-quick macro for handler RTC and get time info from rtc_timer.
+ *				-startup RTC.
+ *					RTC_START()
+ *				-set y,m,d,h,m,s.
+ *					RTC_SET()
+ *				-refresh time info from RTC, and wait for query using fllowing macro.
+ *					RTC_GET()
+ *				-get year,month,day,hour,min,sec,sub_sec.
+ *					RTC_YEAR()
+ *						....
+ *					RTC_SUB_SEC()
+ *		
+**/
 #ifndef _BSP_RTC_H
 #define _BSP_RTC_H
 
@@ -15,8 +43,6 @@
 #define SUNDAY		6
 extern const uint16_t Date_Benchmark[];
 
-//back Time and date.
-extern const uint16_t Bak_Date_Time[];
 extern const char DATE_WEEK_STR[][10];
 
 typedef struct Data_Time
@@ -37,10 +63,6 @@ typedef struct Data_Time
 
 extern Date_t  rtc_timer;  //定义一个时间结构体变量
 
-//得到Date_t的两个父类，一个叫RTC_TimeTypeDef；另一个是RTC_DateTypeDef。
-#define RTC_GET_DATETYPE()	((RTC_DateTypeDef *)&(rtc_timer.week))
-#define RTC_GET_TIMETYPE()	((RTC_TimeTypeDef *)&(rtc_timer.hour))
-
 /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ** 函数名称: Init_RTC
 ** 功能描述: RTC初始化
@@ -48,11 +70,6 @@ extern Date_t  rtc_timer;  //定义一个时间结构体变量
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 u8 Init_RTC(void);
 
-//检查输入时间和日期的参数，分开，注意我们默认是24小时制哦
-//输出0，正确；输出1，错误。
-uint8_t Check_Date(uint16_t year,uint8_t month,uint8_t day);
-
-uint8_t Check_Time(uint8_t hour,uint8_t min,uint8_t sec);
 //设置时钟
 //把输入的时钟转换为秒钟
 //以1970年1月1日为基准
@@ -62,16 +79,6 @@ uint8_t Time_Update(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t
 
 //向RTC更新时间
 void Time_Get(void);
-
-//获得现在是星期几
-//功能描述:输入公历日期得到星期(只允许2000-2099年)
-//输入参数：公历年月日 
-//返回值：星期号																						 
-uint8_t RTC_Get_Week(uint16_t year,uint16_t month,uint16_t day);
-//判断是否是闰年函数
-//输入:年份
-//输出:该年份是不是闰年.1,是.0,不是
-u8 Is_Leap_Year(u16 year);
 
 
 //启动RTC

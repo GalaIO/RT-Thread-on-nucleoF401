@@ -1,4 +1,22 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			Re package TIM and TIM_PWM configuration.
+ *			-init a TIMx with period and Prescaler param.
+ *				TIM_INIT(TIM_TypeDef *TIMx,uint32_t per,uint32_t pre)
+ *			-launch a TIMx_PWM_channel whit the duty.
+ *			  TIM_PWM_INIT(TIM_TypeDef *TIMx,uint8_t channel,uint32_t duty)
+ *			-quick macro for init a TIMx with period and Prescaler param, enable IT_update , cmd right now.
+ *				TIM2_START(per,pre)
+ *				TIM3_START
+ *			-quick macro for launch the specific PWM channel.
+ *				TIM2_PWM_PA0(duty)
+ *							.....
+ *			-note: quick macro only support TIM2 and TIM3.
+ *
+**/
 #ifndef _BSP_TIMER_H
 #define _BSP_TIMER_H
 

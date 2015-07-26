@@ -1,4 +1,18 @@
 
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			Re package Flash configuration.
+ *			-read a word for the specific addr in Flash.
+ *				BSPFLASH_ReadWord(uint32_t faddr)
+ *			-read several words for the specific addr in Flash.
+ *				BSPFLASH_Read(uint32_t ReadAddr,uint32_t *pBuffer,uint32_t NumToRead)
+ *			-write several words for the specific addr in Flash.
+ *				BSPFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite)
+ *			-get the correct sector addr.
+ *				BSPFLASH_GetFlashSector(uint32_t addr)
+**/
 #include "bsp_flash.h"
  
  
