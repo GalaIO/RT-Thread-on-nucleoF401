@@ -30,6 +30,12 @@
  * 2012-12-22     Bernard      fix rt_kprintf issue, which found by Grissiom.
  * 2013-06-24     Bernard      remove rt_kprintf if RT_USING_CONSOLE is not defined.
  * 2013-09-24     aozima       make sure the device is in STREAM mode when used by rt_kprintf.
+ *
+ * 2015-07-26			GalaIO			 //using std C lib, vsnprintf() not the rt_vsnprintf() in rt_kprintf(), 
+ *															//rt_vsnprintf() not a completely implemented function, it cannot handler %f .
+ *															//when vsnprintf() generate a sub string, then rt_hw_console_output() it.
+ *														 //it's more fast, then putc by putc.
+ *
  */
 
 #include <rtthread.h>
@@ -1104,6 +1110,7 @@ RTM_EXPORT(rt_hw_console_output);
  *
  * @param fmt the format
  */
+#include "stdio.h"
 void rt_kprintf(const char *fmt, ...)
 {
     va_list args;
@@ -1116,7 +1123,11 @@ void rt_kprintf(const char *fmt, ...)
      * large excluding the terminating null byte. If the output string
      * would be larger than the rt_log_buf, we have to adjust the output
      * length. */
-    length = rt_vsnprintf(rt_log_buf, sizeof(rt_log_buf) - 1, fmt, args);
+    //length = rt_vsnprintf(rt_log_buf, sizeof(rt_log_buf) - 1, fmt, args);
+		//using std C lib, vsnprintf not the rt_vsnprintf.
+		//when vsnprintf() generate a sub string, then rt_hw_console_output() it.
+		//it's more fast, then putc by putc.
+		length = vsnprintf(rt_log_buf, sizeof(rt_log_buf) - 1, fmt, args);
     if (length > RT_CONSOLEBUF_SIZE - 1)
         length = RT_CONSOLEBUF_SIZE - 1;
 #ifdef RT_USING_DEVICE
