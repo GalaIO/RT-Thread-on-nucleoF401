@@ -26,6 +26,10 @@
 /* Using this macro to control all kernel debug features. */
 #ifdef RT_DEBUG
 
+#ifndef RT_RTC_DEVICE
+#define RT_RTC_DEVICE  								 1
+#endif
+
 /* Turn on some of these (set to non-zero) to debug kernel */
 #ifndef RT_DEBUG_MEM
 #define RT_DEBUG_MEM                   0
