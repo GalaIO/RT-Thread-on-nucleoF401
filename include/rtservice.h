@@ -110,6 +110,10 @@ rt_inline int rt_list_isempty(const rt_list_t *l)
  * @param type the type of structure
  * @param member the name of list in structure
  */
+/*对于 (unsigned long)(&((type *)0)->member) 来说得到了类型type类型到member的偏移地址。
+ *因为是 取 ((type*)0) 所以得到了纯粹的 偏移地址。即(&((type *)0)->member) - &((type *)0)。
+ *所以 (type *)((char *)(node) - (unsigned long)(&((type *)0)->member) 得到了该node 成员的 rt_device结构体地址。
+**/
 #define rt_list_entry(node, type, member) \
     ((type *)((char *)(node) - (unsigned long)(&((type *)0)->member)))
 

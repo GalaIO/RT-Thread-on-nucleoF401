@@ -245,7 +245,7 @@ static rt_size_t rdt_device_write(rt_device_t dev,rt_off_t pos,const void *buffe
 			RT_DEBUG_LOG(RT_RTC_DEVICE,("write RTC, but null buffer!!\r\n"));
 			return 0;
 		}
-		//the device is opened and readable.
+		//the device is opened and writeable. 
 		if((dev->open_flag & RT_DEVICE_OFLAG_OPEN) &&
 				((dev->open_flag & RT_DEVICE_OFLAG_RDWR) ||
 				(dev->open_flag & RT_DEVICE_OFLAG_WRONLY))){
@@ -289,7 +289,7 @@ rt_err_t rdt_device_register(const char* name)
 	rdt_device.control 			= rdt_device_control;
 	rdt_device.user_data		= RT_NULL;
 
-	/* register a character device */
+	/* register a character device must input RDONLY or WRONLY or RDWR and DEACTIVATE*/
 	return rt_device_register(&rdt_device, name, RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_DEACTIVATE);
 }
 

@@ -21,6 +21,7 @@
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
 #include "bsp_sys.h"
+#include "rthw.h"
 
 //使能各中断 并添加响应优先级
 //NVIC 的配置F1系列 与F4 相同

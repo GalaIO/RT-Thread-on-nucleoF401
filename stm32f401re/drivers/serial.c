@@ -90,7 +90,7 @@ static rt_size_t rt_serial_read (rt_device_t dev, rt_off_t pos, void* buffer, rt
 		{
 			rt_base_t level;
 
-			/* disable interrupt */
+			/* disable interrupt ,enter the critical code area, can't be interrupted.*/
 			level = rt_hw_interrupt_disable();
 
 			if (uart->int_rx->read_index != uart->int_rx->save_index)
@@ -114,7 +114,7 @@ static rt_size_t rt_serial_read (rt_device_t dev, rt_off_t pos, void* buffer, rt
 				break;
 			}
 
-			/* enable interrupt */
+			/* enable interrupt, leaving the critical code area, can't be interrupted.*/
 			rt_hw_interrupt_enable(level);
 		}
 	}
