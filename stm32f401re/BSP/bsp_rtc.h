@@ -44,69 +44,6 @@
 
 extern const char DATE_WEEK_STR[][10];
 
-#ifdef RTC_DEVICE_USING_BLOCK
-
-#define RTC_DATE_WEEK_L			0
-#define RTC_DATE_MONTH_L		1
-#define RTC_DATE_DAY_L			2
-#define RTC_DATE_YEAR_L			3
-#define RTC_DATE_HOUR_L			4
-#define RTC_DATE_MIN_L			5
-#define RTC_DATE_SEC_L			6
-#define RTC_DATE_APM_L			7
-#define RTC_DATE_SUBSEC_L		8
-
-#endif /*RTC_DEVICE_USING_BLOCK*/
-
-#ifdef RTC_DEVICE_USING_SHARED_MEM
-
-extern const uint16_t Date_Benchmark[];
-typedef struct Date_Time
-{		
-	//公历日月年周
-	uint8_t 	week;
-	uint8_t  	month;
-	uint8_t  	day;
-	uint8_t  	year;
-	//时 分 秒 选择AM/PM
-	uint8_t 	hour;
-	uint8_t 	min;
-	uint8_t 	sec;	
-	uint8_t		AMoPM;
-	//亚秒(用于精确时间)
-	uint8_t		sub_sec;
-}Date_t; 
-
-extern Date_t  rtc_timer;  //定义一个时间结构体变量
-
-//update date and time.
-uint8_t Time_Update(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec);
-
-//get date and time from RTC.
-void Time_Get(void);
-
-//输入年月日 时分秒
-#define RTC_SET(sy,sm,sd,h,m,s)		(Time_Update(sy,sm,sd,h,m,s))	
-
-#define RTC_GET()						(Time_Get())
-
-//补偿年份
-#define RTC_YEAR()					((uint16_t)rtc_timer.year + Date_Benchmark[0])
-#define RTC_WEEK()					(rtc_timer.week)
-#define RTC_WEEKSTR()				(DATE_WEEK_STR[rtc_timer.week])
-#define RTC_MON()						(rtc_timer.month)
-#define RTC_DAY()						(rtc_timer.day)
-#define RTC_HOUR()					(rtc_timer.hour)
-#define RTC_MIN()						(rtc_timer.min)
-#define RTC_SEC()						(rtc_timer.sec)
-#define RTC_SUB_SEC()				(rtc_timer.sub_sec)
-
-#endif /*RTC_DEVICE_USING_SHARED_MEM*/
-
-
-#define RTC_DEVICE_USING_RTC_STRUCT
-
-#ifdef RTC_DEVICE_USING_RTC_STRUCT
 
 typedef struct RTC_DATE_TIME
 {		
@@ -136,14 +73,10 @@ uint8_t RDT_sync(RDT_t *pRDT);
 //return void.
 void RDT_gain(RDT_t *pRDT);
 
-#endif /*RTC_DEVICE_USING_RTC_STRUCT*/
-
-
 //init a RTC.
 u8 Init_RTC(void);
 
 //启动RTC quick macro.
 #define RTC_START()	 				(Init_RTC())
-
 
 #endif												   

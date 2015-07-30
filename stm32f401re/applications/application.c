@@ -89,75 +89,9 @@ int button_status(void){
 
 #ifdef RT_USING_NUCLEOF401_RTC
 
-#ifdef RTC_DEVICE_USING_SHARED_MEM
-//version 1 ,read and write RTC in a shared Memery.
-void Date_print(void){
-	RTC_GET();
-	rt_kprintf("\r\nDate is :%d/%d/%d  %s\r\n"
-	"Time is :%d-%d-%d  %d\r\n",
-	RTC_YEAR(),RTC_MON(),RTC_DAY(),RTC_WEEKSTR(),
-	RTC_HOUR(),RTC_MIN(),RTC_SEC(),RTC_SUB_SEC());
-}
-#ifdef RT_USING_FINSH
-	FINSH_FUNCTION_EXPORT(Date_print,printf date and Time);
-#endif
-
-void Date_set(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec){
-	if(RTC_SET(year,month,day,hour,min,sec) == 0){
-		rt_kprintf("\r\nsync ok!!\r\n");
-	}else{
-		rt_kprintf("\r\nsync erreo!!\r\n");
-	}
-}
-#ifdef RT_USING_FINSH
-	FINSH_FUNCTION_EXPORT(Date_set,sync date and Time);
-#endif
-#endif /* RTC_DEVICE_USING_SHARED_MEM*/
-
-#ifdef RTC_DEVICE_USING_BLOCK
-//version 2
+//handle RTC as a struct.
 #include "rtc.h"
-void Date_print2(uint8_t pos){
-	rtc_t temp[3];
-	rt_device_t dev;
-	dev = rt_device_find("rtc");
-	if(dev != RT_NULL){
-		rt_device_open(dev,RT_DEVICE_OFLAG_RDONLY);
-		rt_device_read(dev,pos,temp,3);
-		rt_device_close(dev);
-	}
-	rt_kprintf("\r\nDate is :%d/%d/%d\r\n",
-			temp[0],temp[1],temp[2]);
-}
-#ifdef RT_USING_FINSH
-	FINSH_FUNCTION_EXPORT(Date_print2,printf date and Time);
-#endif
-
-void Date_set2(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec){
-	rtc_t temp[7];
-	rt_device_t dev;
-	temp[RTC_DATE_YEAR_L] = year;
-	temp[RTC_DATE_MONTH_L] = month;
-	temp[RTC_DATE_DAY_L] = day;
-	temp[RTC_DATE_HOUR_L] = hour;
-	temp[RTC_DATE_MIN_L] = min;
-	temp[RTC_DATE_SEC_L] = sec;
-	dev = rt_device_find("rtc");
-	if(dev != RT_NULL){
-		rt_device_open(dev,RT_DEVICE_OFLAG_WRONLY);
-		rt_device_write(dev,0,temp,7);
-		rt_device_close(dev);
-	}
-}
-#ifdef RT_USING_FINSH
-	FINSH_FUNCTION_EXPORT(Date_set2,sync date and Time);
-#endif
-#endif /* RTC_DEVICE_USING_BLOCK*/
-
-#ifdef RTC_DEVICE_USING_RTC_STRUCT
-//version 3, handle RTC as a struct.
-#include "rtc.h"
-void Date_print3(){
+void Date_print(){
 	RDT_t rdt;
 	rt_device_t dev;
 	dev = rt_device_find("rdt");
@@ -172,10 +106,10 @@ void Date_print3(){
 			rdt.hour,rdt.min,rdt.sec,rdt.sub_sec);
 }
 #ifdef RT_USING_FINSH
-	FINSH_FUNCTION_EXPORT(Date_print3,printf date and Time);
+	FINSH_FUNCTION_EXPORT(Date_print,printf date and Time);
 #endif
 
-void Date_set3(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec){
+void Date_set(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec){
 	RDT_t rdt;
 	rt_device_t dev;
 	rdt.year = year;
@@ -192,10 +126,8 @@ void Date_set3(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,
 	}
 }
 #ifdef RT_USING_FINSH
-	FINSH_FUNCTION_EXPORT(Date_set3,sync date and Time);
+	FINSH_FUNCTION_EXPORT(Date_set,sync date and Time);
 #endif
-
-#endif /*RTC_DEVICE_USING_RTC_STRUCT*/
 
 #endif /* RT_USING_NUCLEOF401_RTC*/
 

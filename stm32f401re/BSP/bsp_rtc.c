@@ -31,23 +31,11 @@
  *  define and declare.
 **/
 
-#ifdef RTC_DEVICE_USING_SHARED_MEM
-
-Date_t  rtc_timer;  //定义一个时间结构体变量
-//得到Date_t的两个父类，一个叫RTC_TimeTypeDef；另一个是RTC_DateTypeDef。
-#define RTC_GET_DATETYPE()	((RTC_DateTypeDef *)&(rtc_timer.week))
-#define RTC_GET_TIMETYPE()	((RTC_TimeTypeDef *)&(rtc_timer.hour))
-
-#endif /*RTC_DEVICE_USING_SHARED_MEM*/
-
-
-#ifdef RTC_DEVICE_USING_RTC_STRUCT
 
 //得到Date_t的两个父类，一个叫RTC_TimeTypeDef；另一个是RTC_DateTypeDef。
 #define RDT_GET_DATETYPE(pRDT)	((RTC_DateTypeDef *)&(pRDT->week))
 #define RDT_GET_TIMETYPE(pRDT)	((RTC_TimeTypeDef *)&(pRDT->hour))
 
-#endif /*RTC_DEVICE_USING_RTC_STRUCT*/
 
 //检查输入时间和日期的参数，分开，注意我们默认是24小时制哦
 //输出0，正确；输出1，错误。
@@ -97,6 +85,7 @@ const char DATE_WEEK_STR[][10] = {"1221","MONDAY","TUESDAY","WEDNESDAY","THURSDA
 u8 Init_RTC(void)
 {
 	RTC_InitTypeDef RTC_InitStructure;
+	RDT_t rdt;
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); //使能PER时钟
 																	//使能PWR和BKP外设时钟   		
 	PWR_BackupAccessCmd(ENABLE);									//使能RTC和后备寄存器访问 
@@ -115,10 +104,14 @@ u8 Init_RTC(void)
     RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;//RTC设置为24小时制
     RTC_Init(&RTC_InitStructure);
 		
-#ifdef RTC_DEVICE_USING_SHARED_MEM
 		//设置最原始时间，就像手机没有电池后，时间会变成厂家预设的
-		RTC_SET(Bak_Date_Time[0],Bak_Date_Time[1],Bak_Date_Time[2],Bak_Date_Time[3],Bak_Date_Time[4],Bak_Date_Time[5]);			
-#endif /*RTC_DEVICE_USING_SHARED_MEM*/
+		rdt.year = Bak_Date_Time[0];
+		rdt.month = Bak_Date_Time[1];
+		rdt.day = Bak_Date_Time[2];
+		rdt.hour = Bak_Date_Time[3];
+		rdt.min = Bak_Date_Time[4];
+		rdt.sec = Bak_Date_Time[5];
+		RDT_sync(&rdt);
 		RTC_WriteBackupRegister(RTC_BKP_DR0, 0x5555);					//向指定的后备寄存器中写入用户程序数据0X5555做判断标志										
 	}																 	
 	//不是第一次配置 继续计时
@@ -208,8 +201,6 @@ void Time_Get(void){
 #endif /*RTC_DEVICE_USING_SHARED_MEM*/
 
 
-
-#ifdef RTC_DEVICE_USING_RTC_STRUCT
 //sync the date and time to RTC.
 //@param pRDT		a point to a RTC struct.
 //return 0:success; other:faild.
@@ -260,7 +251,6 @@ void RDT_gain(RDT_t *pRDT){
 	return ;
 }
 
-#endif /*RTC_DEVICE_USING_RTC_STRUCT*/
 
 //获得现在是星期几
 //功能描述:输入公历日期得到星期(只允许2000-2099年)

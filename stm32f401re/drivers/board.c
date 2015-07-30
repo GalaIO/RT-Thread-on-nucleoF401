@@ -54,13 +54,8 @@ void nucleo_borad_init(){
 #ifdef RT_USING_NUCLEOF401_RTC
 		//start RTC.
 		RTC_START();
-#ifdef RTC_DEVICE_USING_BLOCK
-		rtc_device_register("rtc");
-#endif /*RTC_DEVICE_USING_BLOCK*/
 
-#ifdef RTC_DEVICE_USING_RTC_STRUCT
 		rdt_device_register("rdt");
-#endif /*RTC_DEVICE_USING_RTC_STRUCT*/
 	
 #endif
 	
