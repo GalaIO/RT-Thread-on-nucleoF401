@@ -35,12 +35,12 @@ void NVIC_CMD(u8 channel,u8 pre,u8 sub){
 void delayMS(int count){
  	unsigned int tmp;
 	while(count--){
-	 	for(tmp=STM32F4_SYSTEM_FREQUENCE()/6/1000;tmp;tmp--);
+	 	for(tmp=STM32F4_SYSTEM_FREQUENCE()/4/1000;tmp;tmp--);
 	}
 } 
 void delayUS(int count){
  	unsigned int tmp;
 	while(count--){
-	 	for(tmp=STM32F4_SYSTEM_FREQUENCE()/6.5/1000000;tmp;tmp--);
+	 	for(tmp=STM32F4_SYSTEM_FREQUENCE()/4.1/1000000;tmp;tmp--);
 	}
 }

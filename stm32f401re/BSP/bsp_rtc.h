@@ -58,7 +58,7 @@ typedef struct RTC_DATE_TIME
 	uint8_t 	sec;	
 	uint8_t		AMoPM;
 	//亚秒(用于精确时间)
-	uint8_t		sub_sec;
+	uint16_t		sub_sec;
 }RDT_t;
 
 

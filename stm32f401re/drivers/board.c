@@ -49,8 +49,10 @@
  */
 
 #include "rtc.h"
+#include "bsp_iic1.h"
+#include "bsp_mpu6050.h"
 void nucleo_borad_init(){
-		
+		rt_kprintf("init the borad resource!!!\r\n");
 #ifdef RT_USING_NUCLEOF401_RTC
 		//start RTC.
 		RTC_START();
@@ -71,11 +73,20 @@ void nucleo_borad_init(){
 		TIM2_PWM_PA0(500);
 		TIM2_PWM_PA1(500);
 #endif
-	
-#ifdef RT_USING_NUCLEOF401_ADC_TEMP
-	ADC_INERTEMP_INIT();
+
 #endif
 	
+#ifdef RT_USING_NUCLEOF401_ADC_TEMP
+		ADC_INERTEMP_INIT();
+#endif
+
+#ifdef RT_USING_IIC1
+		IIC1_Init();
+#ifdef RT_USING_MPU6050
+		MPU6050_init();
+		rt_kprintf("the id of mpu6050 is %x \r\n",MPU6050_getDeviceID());
+#endif
+
 #endif
 }
 
