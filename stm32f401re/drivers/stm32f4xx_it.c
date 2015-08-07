@@ -25,6 +25,9 @@
 #include "stm32f4xx.h"
 #include "rtthread.h"
 #include "board.h"
+#include "rtusing.h"
+#include "bsp_user.h"
+#include "rtdebug.h"
 
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
@@ -215,6 +218,26 @@ void EXTI15_10_IRQHandler(){
 		if(isEXTI(BIT13)){
 			button_keyDown_callback();
 			clrEXTI(BIT13);
+		}
+    /* leave interrupt */
+    rt_interrupt_leave();
+}
+#endif
+
+#if defined(RT_DMP_DEVICE) && defined(RT_USING_MPU6050) && defined(RT_USING_DMP)
+#include "bsp_gpio.h"
+#include "bsp_exti.h"
+extern void dmp_device_isr(void);
+void EXTI4_IRQHandler(){
+    /* enter interrupt */
+    rt_interrupt_enter();
+		rt_kprintf("i am in smp_device_isr!\r\n");
+		if(isEXTI(BIT4)){
+			
+			//isr handler.
+			dmp_device_isr();
+			
+			clrEXTI(BIT4);
 		}
     /* leave interrupt */
     rt_interrupt_leave();
