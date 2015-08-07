@@ -49,8 +49,22 @@
  */
 
 #include "rtc.h"
+#ifdef RT_USING_NUCLEOF401_RTC
+#include "rtc.h"
+#endif
+#include "bsp_mpu6050.h"
+#ifdef RT_USING_IIC1
+#include "bsp_iic1.h"
+#ifdef RT_USING_MPU6050
+#include "bsp_mpu6050.h"
+#ifdef RT_USING_DMP
+#include "inv_mpu.h"
+#include "mpu6050_dmp.h"
+#endif
+#endif
+#endif
 void nucleo_borad_init(){
-		
+		rt_kprintf("init the borad resource!!!\r\n");
 #ifdef RT_USING_NUCLEOF401_RTC
 		//start RTC.
 		RTC_START();
@@ -71,11 +85,47 @@ void nucleo_borad_init(){
 		TIM2_PWM_PA0(500);
 		TIM2_PWM_PA1(500);
 #endif
-	
-#ifdef RT_USING_NUCLEOF401_ADC_TEMP
-	ADC_INERTEMP_INIT();
+
 #endif
 	
+#ifdef RT_USING_NUCLEOF401_ADC_TEMP
+		ADC_INERTEMP_INIT();
+#endif
+
+#ifdef RT_USING_IIC1
+		IIC1_Init();
+#ifdef RT_USING_MPU6050
+		MPU6050_init();
+		rt_kprintf("the id of mpu6050 is %x \r\n",MPU6050_getDeviceID());
+#ifdef RT_USING_DMP
+		while(1){
+			int error_info = mpu_dmp_init();
+			if ( error_info != 0 )
+			{
+				rt_kprintf( "init DMP WAITING %d\r\n", error_info );
+			}
+			else
+			{
+				rt_kprintf( "init DMP SUCCESS!!\r\n" );
+				break;
+			}
+			LED_OFF();
+			delayMS(200);
+			LED_ON();
+			delayMS(200);
+		}
+		//then init the device.
+		dmp_device_register(DMP_DEVICE_NAME);
+		//init the INT_RX, PA4;
+		RCC_CMD(PA_PER);
+		PAIN_INT(BIT4);
+		//SYSCFG_ENABLE();
+		PAEXTI_INT(PIN4,EXTI_F);
+		GENERAL_NVIC_CMD(EXTI4_IRQn);
+		
+#endif
+#endif
+
 #endif
 }
 
@@ -161,10 +211,11 @@ void rt_hw_board_init()
 	NVIC_Configuration();
 
 	rt_hw_usart_init();
+
 #ifdef RT_USING_CONSOLE
+	//init the console, for debug sonmethhing.
 	rt_console_set_device(CONSOLE_DEVICE);
 #endif
-
 	nucleo_borad_init();
 	
 	/* Configure the SysTick */
