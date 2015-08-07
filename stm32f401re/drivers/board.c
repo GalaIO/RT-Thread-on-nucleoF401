@@ -49,7 +49,6 @@
  */
 
 #include "rtc.h"
-<<<<<<< HEAD
 #ifdef RT_USING_NUCLEOF401_RTC
 #include "rtc.h"
 #endif
@@ -64,10 +63,6 @@
 #endif
 #endif
 #endif
-=======
-#include "bsp_iic1.h"
-#include "bsp_mpu6050.h"
->>>>>>> 2fb89b191734984412ab9b61950f442911b42e58
 void nucleo_borad_init(){
 		rt_kprintf("init the borad resource!!!\r\n");
 #ifdef RT_USING_NUCLEOF401_RTC
@@ -95,7 +90,6 @@ void nucleo_borad_init(){
 	
 #ifdef RT_USING_NUCLEOF401_ADC_TEMP
 		ADC_INERTEMP_INIT();
-<<<<<<< HEAD
 #endif
 
 #ifdef RT_USING_IIC1
@@ -130,15 +124,6 @@ void nucleo_borad_init(){
 		GENERAL_NVIC_CMD(EXTI4_IRQn);
 		
 #endif
-=======
-#endif
-
-#ifdef RT_USING_IIC1
-		IIC1_Init();
-#ifdef RT_USING_MPU6050
-		MPU6050_init();
-		rt_kprintf("the id of mpu6050 is %x \r\n",MPU6050_getDeviceID());
->>>>>>> 2fb89b191734984412ab9b61950f442911b42e58
 #endif
 
 #endif

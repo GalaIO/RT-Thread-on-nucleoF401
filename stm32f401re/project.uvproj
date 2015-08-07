@@ -995,7 +995,6 @@
               <FileType>5</FileType>
               <FilePath>.\BSP\bsp_mpu6050.h</FilePath>
             </File>
-<<<<<<< HEAD
           </Files>
         </Group>
         <Group>
@@ -1031,8 +1030,6 @@
               <FileType>5</FileType>
               <FilePath>.\eMPL\inv_mpu_dmp_motion_driver.h</FilePath>
             </File>
-=======
->>>>>>> 2fb89b191734984412ab9b61950f442911b42e58
           </Files>
         </Group>
       </Groups>
