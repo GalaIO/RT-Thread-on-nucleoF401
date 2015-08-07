@@ -365,9 +365,9 @@
             <v6LangP>0</v6LangP>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F401xx,STM32F401xE</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F401xx,STM32F401xE,MOTION_DRIVER_TARGET_RTTHREAD_STM32F4,MPU6050,</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\components\finsh;..\include;..\libcpu\arm\common;..\libcpu\arm\cortex-m4;Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;Libraries\CMSIS\Include;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\STM32F4xx_StdPeriph_Driver\inc;applications;drivers;.\BSP</IncludePath>
+              <IncludePath>.;..\components\finsh;..\include;..\libcpu\arm\common;..\libcpu\arm\cortex-m4;Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;Libraries\CMSIS\Include;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\STM32F4xx_StdPeriph_Driver\inc;applications;drivers;.\BSP;.\eMPL</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -419,6 +419,11 @@
               <FileName>startup.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\startup.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmp_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\dmp_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -489,6 +494,31 @@
               <FileName>usart.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\drivers\usart.h</FilePath>
+            </File>
+            <File>
+              <FileName>rt_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\rt_printf.c</FilePath>
+            </File>
+            <File>
+              <FileName>rt_scanf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\rt_scanf.c</FilePath>
+            </File>
+            <File>
+              <FileName>GFifo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\drivers\GFifo.h</FilePath>
+            </File>
+            <File>
+              <FileName>mpu6050_dmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\mpu6050_dmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu6050_dmp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\drivers\mpu6050_dmp.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -906,16 +936,6 @@
               <FilePath>.\BSP\bsp_exti.h</FilePath>
             </File>
             <File>
-              <FileName>bsp_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\bsp_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_fifo.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\BSP\bsp_fifo.h</FilePath>
-            </File>
-            <File>
               <FileName>bsp_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\bsp_timer.c</FilePath>
@@ -954,6 +974,61 @@
               <FileName>bsp_flash.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\BSP\bsp_flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_iic1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_iic1.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_iic1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_iic1.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_mpu6050.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>eMPL</GroupName>
+          <Files>
+            <File>
+              <FileName>dmpKey.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\eMPL\dmpKey.h</FilePath>
+            </File>
+            <File>
+              <FileName>dmpmap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\eMPL\dmpmap.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\eMPL\inv_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\eMPL\inv_mpu.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\eMPL\inv_mpu_dmp_motion_driver.h</FilePath>
             </File>
           </Files>
         </Group>
