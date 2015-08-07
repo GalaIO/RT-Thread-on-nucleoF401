@@ -955,6 +955,26 @@
               <FileType>5</FileType>
               <FilePath>.\BSP\bsp_flash.h</FilePath>
             </File>
+            <File>
+              <FileName>bsp_iic1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_iic1.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_iic1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_iic1.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_mpu6050.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
