@@ -82,7 +82,72 @@ static rt_size_t rdt_device_write(rt_device_t dev,rt_off_t pos,const void *buffe
 
 //implement the common interface rt_err_t control(rt_device_t dev,rt_uint8_t cmd,void *args).
 static rt_err_t rdt_device_control(rt_device_t dev,rt_uint8_t cmd,void *args){
-		//just do nothing.
+		RDT_t tmp;
+		switch(cmd){
+			case RTC_CMD_GET_SUBSEC:
+				//do{
+					if(rdt_device_read(dev,0,&tmp,sizeof(RDT_t)) > 0){
+						*(uint16_t *)args = tmp.sub_sec;
+					}else{
+						return RT_ERROR;
+					}
+				//}while(0);
+				break;
+			case RTC_CMD_GET_TIME:
+				//you will get hour,min,sec.
+					if(rdt_device_read(dev,0,&tmp,sizeof(RDT_t)) > 0){
+						uint16_t *buf = (uint16_t *)args;
+						buf[0] = tmp.hour;	
+						buf[1] = tmp.min;
+						buf[2] = tmp.sec;
+					}else{
+						return RT_ERROR;
+					}
+				break;
+			case RTC_CMD_GET_DATE:
+				//you will get year,month,day.
+					if(rdt_device_read(dev,0,&tmp,sizeof(RDT_t)) > 0){
+						uint16_t *buf = (uint16_t *)args;
+						buf[0] = tmp.year;
+						buf[1] = tmp.month;
+						buf[2] = tmp.day;
+					}else{
+						return RT_ERROR;
+					}
+				break;
+			case RTC_CMD_SET_TIME:
+					if(rdt_device_read(dev,0,&tmp,sizeof(RDT_t)) > 0){
+						uint16_t *buf = (uint16_t *)args;
+						tmp.hour = buf[0];	
+						tmp.min = buf[1];
+						tmp.sec = buf[2];
+						if(rdt_device_write(dev,0,&tmp,sizeof(RDT_t)) <= 0){
+							return RT_ERROR;
+						}
+					}else{
+						return RT_ERROR;
+					}
+				break;
+			case RTC_CMD_SET_DATE:
+					if(rdt_device_read(dev,0,&tmp,sizeof(RDT_t)) > 0){
+						uint16_t *buf = (uint16_t *)args;
+						tmp.year = buf[0];
+						tmp.month = buf[1];
+						tmp.day = buf[2];
+						if(rdt_device_write(dev,0,&tmp,sizeof(RDT_t)) <= 0){
+							return RT_ERROR;
+						}
+					}else{
+						return RT_ERROR;
+					}
+				break;
+			case RTC_CMD_SET_DEFAULT:
+					setDefaultRTC();
+				break;
+			default:
+				return RT_EOK;
+		}
+	
 		return RT_EOK;
 }
 
@@ -94,7 +159,7 @@ rt_err_t rdt_device_register(const char* name)
 {
 	
 	/*
-	 *in RTC device, init open close callback handler, can be RT_NULL.
+	 *in RTC device,  open close callback handler, can be RT_NULL.
 	**/
 	
 	rdt_device.type 				= RT_Device_Class_RTC;
