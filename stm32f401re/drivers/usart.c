@@ -59,12 +59,18 @@ struct rt_device uart2_device;
 
 #ifdef RT_USING_UART3
 struct stm32_serial_int_rx uart3_int_rx;
+#ifdef RT_USING_UART3_DMA
 struct stm32_serial_dma_tx uart3_dma_tx;
+#endif
 struct stm32_serial_device uart3 =
 {
 	USART3,
 	&uart3_int_rx,
+#ifdef RT_USING_UART3_DMA
 	&uart3_dma_tx
+#else 
+	RT_NULL
+#endif
 };
 struct rt_device uart3_device;
 #endif
@@ -125,8 +131,10 @@ static void RCC_Configuration(void)
 	/* Enable USART3 clock */
 	RCC_APB1PeriphClockCmd(RCC_APBPeriph_UART3, ENABLE);
 
+#ifdef RT_USING_UART3_DMA
 	/* DMA clock enable */
 	RCC_APB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
+#endif
 #endif
 }
 
@@ -198,17 +206,19 @@ static void NVIC_Configuration(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
+#ifdef RT_USING_UART3_DMA
 	/* Enable the DMA1 Channel2 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 #endif
+#endif
 }
 
 static void DMA_Configuration(void)
 {
-#if defined (RT_USING_UART3)
+#if defined (RT_USING_UART3) && defined(RT_USING_UART3_DMA)
 	DMA_InitTypeDef DMA_InitStructure;
 
 //  /* Configure DMA Stream */
@@ -337,11 +347,18 @@ void rt_hw_usart_init()
 
 	/* register uart3 */
 	rt_hw_serial_register(&uart3_device, "uart3",
-		RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX | RT_DEVICE_FLAG_DMA_TX,
+		RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX | 
+#ifdef RT_USING_UART3_DMA
+RT_DEVICE_FLAG_DMA_TX,
+#else
+RT_DEVICE_FLAG_STREAM,
+#endif
 		&uart3);
 
+#ifdef RT_USING_UART3_DMA
 	/* Enable USART3 DMA Tx request */
 	USART_DMACmd(USART3, USART_DMAReq_Tx , ENABLE);
+#endif
 
 	/* enable interrupt */
 	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
