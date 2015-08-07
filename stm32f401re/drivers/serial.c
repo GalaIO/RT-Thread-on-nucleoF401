@@ -359,6 +359,10 @@ void rt_hw_serial_isr(rt_device_t device)
 
 			device->rx_indicate(device, rx_length);
 		}
+		
+		/*@added GalaIO, release the rx_sem*/
+		rt_device_Rx_Done(device);
+		
 	}
 
 	if (USART_GetITStatus(uart->uart_device, USART_IT_TC) != RESET)
