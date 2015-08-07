@@ -41,6 +41,28 @@
  *			-info：	add more referance info for user.
  *			
  *
+ *	Author:		GalaIO
+ *	Date:			2015-8-2 8:19 PM
+ *	Description: add rt_sem_t for device to get data from RX
+ *			
+ *
+ *	Author:		GalaIO
+ *	Date:			2015-8-2 10:57 PM
+ *	Description: 
+ *			--add new operation for dev->rx_sem;
+ *				rt_err_t rt_device_Rx_Done(rt_device_t dev);
+ *				rt_err_t rt_device_Rx_Wait(rt_device_t dev);
+ *			--change the device_open and device_init_all behavior,when the device is not actived, then creat a rx_sem .
+ *			--change the device_close, if no one using it, then free the rx_sem and set it deactive flag.
+ *
+ *	Author:		GalaIO
+ *	Date:			2015-8-2 10:57 PM
+ *	Description: 
+ *			--add new operation for dev->tx_sem;
+ *				rt_err_t rt_device_Tx_Done(rt_device_t dev);
+ *				rt_err_t rt_device_Tx_Wait(rt_device_t dev);
+ *			--when the device is not actived, then creat a tx_sem .
+ *			--if no one using it, then free the tx_sem and set it deactive flag.
  *
  */
 
@@ -121,12 +143,24 @@ rt_err_t rt_device_init_all(void)
         /* get device init handler */
         init = device->init;
         if (init != RT_NULL && !(device->flag & RT_DEVICE_FLAG_ACTIVATED))
-        {
-            result = init(device);
+        {	
+						/*@added GalaIO, if the device is deactived, then alloc a sem for the device.*/
+						device->rx_sem = rt_sem_create(device->parent.name,0,RT_IPC_FLAG_PRIO);
+						/*@added GalaIO, if device->rx_sem, not change the flag, return right now.*/
+            if (device->rx_sem == RT_NULL)
+            {
+                rt_kprintf("To initialize device:%s failed. no more mem for rx_sem\n",
+                           device->parent.name);
+
+                return result;
+            }
+            result = device->init(device);
             if (result != RT_EOK)
             {
                 rt_kprintf("To initialize device:%s failed. The error code is %d\n",
                            device->parent.name, result);
+
+                return result;
             }
             else
             {
@@ -262,7 +296,7 @@ rt_err_t rt_device_init(rt_device_t dev)
  *        		c.设备在使用是 只允许修改open_flag，不能修改flag，这是定律。
  *				d.对于一个简单设备说，可以不实现dev的open，close，因为他们的工作主要是检查打开参数有效，
  *				检测设备计数是否一致我们可以在这些中加入debug消息，或者在设备被启动时做一些动作等。
- *  			同时如果没有私有数据的初始化等工作，init初始化也可以选择不实现。
+ *  			同时如果没有私有数据的初始化等工作，init初始化也必须实现。
 **/
 rt_err_t rt_device_open(rt_device_t dev, rt_uint16_t oflag)
 {
@@ -279,14 +313,40 @@ rt_err_t rt_device_open(rt_device_t dev, rt_uint16_t oflag)
 		  RT_DEVICE_OFLAG_RDWR   == oflag) &&  
 		 (dev->flag & oflag))){
 		//wrong param ==> oflag or wrong attri ==> dev->flag	 
-		RT_DEBUG_LOG(RT_DEBUG_DEVICE,("wrong param ==> oflag or wrong attri ==> dev->flag!!\r\n"));
+		RT_DEBUG_LOG(RT_DEBUG_DEVICE,("%s wrong param ==> oflag or wrong attri ==> dev->flag!!\r\n",dev->parent.name));
 		return RT_ERROR;
 	}
     /* if device is not initialized, initialize it. */
     if (!(dev->flag & RT_DEVICE_FLAG_ACTIVATED))
     {
         if (dev->init != RT_NULL)
-        {
+        {		
+						/*@added GalaIO, if the device is INT_RX mode, then init the rx_sem, rather just ignore.*/
+						if(dev->rx_sem == RT_NULL && dev->flag & RT_DEVICE_FLAG_INT_RX){
+							/*@added GalaIO, if the device is deactived, then alloc a sem for the device.*/
+							dev->rx_sem = rt_sem_create(dev->parent.name,0,RT_IPC_FLAG_PRIO);
+							/*@added GalaIO, if device->rx_sem, not change the flag, return right now.*/
+							if (dev->rx_sem == RT_NULL)
+							{
+									rt_kprintf("To initialize device:%s failed. no more mem for rx_sem\n",
+														 dev->parent.name);
+
+									return RT_ENOMEM;
+							}
+					  }
+						/*@added GalaIO, if the device is INT_TX mode, then init the tx_sem, rather just ignore.*/
+						if(dev->tx_sem == RT_NULL && dev->flag & RT_DEVICE_FLAG_INT_TX){
+							/*@added GalaIO, if the device is deactived, then alloc a sem for the device.*/
+							dev->tx_sem = rt_sem_create(dev->parent.name,0,RT_IPC_FLAG_PRIO);
+							/*@added GalaIO, if device->tx_sem, not change the flag, return right now.*/
+							if (dev->tx_sem == RT_NULL)
+							{
+									rt_kprintf("To initialize device:%s failed. no more mem for tx_sem\n",
+														 dev->parent.name);
+
+									return RT_ENOMEM;
+							}
+					  }
             result = dev->init(dev);
             if (result != RT_EOK)
             {
@@ -304,7 +364,7 @@ rt_err_t rt_device_open(rt_device_t dev, rt_uint16_t oflag)
     if ((dev->flag & RT_DEVICE_FLAG_STANDALONE) &&
         (dev->open_flag & RT_DEVICE_OFLAG_OPEN))
     {
-		RT_DEBUG_LOG(RT_DEBUG_DEVICE,("sorry this is a standalong device, cannot shared it, please waiting!!\r\n"));
+				RT_DEBUG_LOG(RT_DEBUG_DEVICE,("%s sorry this is a standalong device, cannot shared it, please waiting!!\r\n",dev->parent.name));
         return -RT_EBUSY;
     }
 
@@ -312,8 +372,8 @@ rt_err_t rt_device_open(rt_device_t dev, rt_uint16_t oflag)
     if (dev->open != RT_NULL)
     {
         result = dev->open(dev, oflag);
-		/*@added modify oflag autoly.*/
-		dev->open_flag |= oflag;
+				/*@added modify oflag autoly.*/
+				dev->open_flag |= oflag;
     }
 
     /* set open flag */
@@ -330,6 +390,50 @@ rt_err_t rt_device_open(rt_device_t dev, rt_uint16_t oflag)
     return result;
 }
 RTM_EXPORT(rt_device_open);
+
+/*
+ *@added GalaIO, This function will find the name and open it direct.
+ *
+ *@param name, the name you want to open and fund.
+ *
+ *@return RT_NULL: not find or open successful, the pointer of device: find and open successful.
+ *
+**/
+
+rt_device_t rt_device_find_open(const char *name, const char ochar){
+	
+		rt_device_t	dev = rt_device_find(name);
+		if(dev == RT_NULL){
+			return RT_NULL;
+		}else{
+			//find the device.
+			switch(ochar){
+				//open with readonly.
+				case 'r':
+					if(RT_EOK != rt_device_open(dev,RT_DEVICE_OFLAG_RDONLY)){
+						return RT_NULL;
+					}
+					break;
+				case 'w':
+				//open with writeonly.
+					if(RT_EOK != rt_device_open(dev,RT_DEVICE_OFLAG_WRONLY)){
+						return RT_NULL;
+					}
+					break;
+				case 'a':
+				//open with all mode.
+					if(RT_EOK != rt_device_open(dev,RT_DEVICE_OFLAG_RDWR)){
+						return RT_NULL;
+					}
+					break;
+				default:
+					return RT_NULL;
+			}
+		}
+		//find and open successful.
+		return dev;
+		
+}
 
 /**
  * This function will close a device
@@ -355,9 +459,9 @@ rt_err_t rt_device_close(rt_device_t dev)
     RT_ASSERT(dev != RT_NULL);
 
     if (dev->ref_count == 0){
-        RT_DEBUG_LOG(RT_DEBUG_DEVICE,("the time of device_open and device_close is not match!!\r\n"));
-		return -RT_ERROR;
-	}
+        RT_DEBUG_LOG(RT_DEBUG_DEVICE,("%s the time of device_open and device_close is not match!!\r\n",dev->parent.name));
+				return -RT_ERROR;
+		}
 
     dev->ref_count--;
 
@@ -371,12 +475,108 @@ rt_err_t rt_device_close(rt_device_t dev)
     }
 
     /* set open flag */
-    if (result == RT_EOK || result == -RT_ENOSYS)
+    if (result == RT_EOK || result == -RT_ENOSYS){
         dev->open_flag = RT_DEVICE_OFLAG_CLOSE;
+				/*@added GalaIO, if the device is INT_RX mode, then init the rx_sem, rather just ignore.*/
+				if(dev->rx_sem != RT_NULL && dev->flag & RT_DEVICE_FLAG_INT_RX){
+					/*@added GalaIO, if noboby use the device and close callback EOK, then free the rx_sem*/
+					rt_sem_delete(dev->rx_sem);
+				}
+				/*@added GalaIO, if the device is INT_TX mode, then init the Tx_sem, rather just ignore.*/
+				if(dev->tx_sem != RT_NULL && dev->flag & RT_DEVICE_FLAG_INT_TX){
+					/*@added GalaIO, if noboby use the device and close callback EOK, then free the Tx_sem*/
+					rt_sem_delete(dev->tx_sem);
+				}
+				/*@added GalaIO, and toogle the device status ---- active*/
+				dev->flag &= ~RT_DEVICE_FLAG_ACTIVATED;
+				/*@added GalaIO, from here, if you want to open it again, must run init -- callback*/
+		}
 
     return result;
 }
 RTM_EXPORT(rt_device_close);
+
+/*
+ *@added GalaIO, this function will release the dev->rx_sem.
+ *
+ *@param dev, the specific has new Data arrived, now notice the waitting thread.
+ *
+ *@return RT_EOK, always.
+ *
+**/
+
+rt_err_t rt_device_Rx_Done(rt_device_t dev)
+{
+    RT_ASSERT(dev != RT_NULL);
+		
+		if(dev->rx_sem == RT_NULL)
+			return RT_ECANNOT;
+	
+    /* release semaphore to let finsh thread rx data */
+    rt_sem_release(dev->rx_sem);
+
+    return RT_EOK;
+}
+/*
+ *@added GalaIO, this function will wait for the dev's Rx data.
+ *
+ *@param dev, wait someone.
+ *
+ *@return RT_EOK, always.
+ *
+**/
+
+rt_err_t rt_device_Rx_Wait(rt_device_t dev)
+{
+    RT_ASSERT(dev != RT_NULL);
+
+		if(dev->rx_sem == RT_NULL)
+			return RT_ECANNOT;
+		
+    /* wait rx data */
+    return rt_sem_take(dev->rx_sem,RT_WAITING_FOREVER);
+}
+
+/*
+ *@added GalaIO, this function will release the dev->tx_sem.
+ *
+ *@param dev, the specific has new Data arrived, now notice the waitting thread.
+ *
+ *@return RT_EOK, always.
+ *
+**/
+
+rt_err_t rt_device_Tx_Done(rt_device_t dev)
+{
+    RT_ASSERT(dev != RT_NULL);
+		
+		if(dev->tx_sem == RT_NULL)
+			return RT_ECANNOT;
+	
+    /* release semaphore to let finsh thread rx data */
+    rt_sem_release(dev->tx_sem);
+
+    return RT_EOK;
+}
+/*
+ *@added GalaIO, this function will wait for the dev's Tx data.
+ *
+ *@param dev, wait someone.
+ *
+ *@return RT_EOK, always.
+ *
+**/
+
+rt_err_t rt_device_Tx_Wait(rt_device_t dev)
+{
+    RT_ASSERT(dev != RT_NULL);
+
+		if(dev->tx_sem == RT_NULL)
+			return RT_ECANNOT;
+		
+    /* wait rx data */
+    return rt_sem_take(dev->tx_sem,RT_WAITING_FOREVER);
+}
 
 /**
  * This function will read some data from a device.
@@ -410,7 +610,7 @@ rt_size_t rt_device_read(rt_device_t dev,
 	if(!((dev->open_flag & RT_DEVICE_OFLAG_OPEN) &&
 	    ((dev->open_flag & RT_DEVICE_OFLAG_RDWR) ||
 	    (dev->open_flag & RT_DEVICE_OFLAG_RDONLY)))){
-		RT_DEBUG_LOG(RT_DEBUG_DEVICE,("in read:the device is not opened correctly check oflag or open it again!!\r\n"));
+		RT_DEBUG_LOG(RT_DEBUG_DEVICE,("%s in read:the device is not opened correctly check oflag or open it again!!\r\n",dev->parent.name));
 		return RT_ERROR;
 	}
 	
@@ -463,7 +663,7 @@ rt_size_t rt_device_write(rt_device_t dev,
 	if(!((dev->open_flag & RT_DEVICE_OFLAG_OPEN) &&
 	    ((dev->open_flag & RT_DEVICE_OFLAG_RDWR) ||
 		(dev->open_flag & RT_DEVICE_OFLAG_WRONLY)))){
-		RT_DEBUG_LOG(RT_DEBUG_DEVICE,("in write:the device is not opened correctly check oflag or open it again!!\r\n"));
+		RT_DEBUG_LOG(RT_DEBUG_DEVICE,("%s in write:the device is not opened correctly check oflag or open it again!!\r\n",dev->parent.name));
 		return RT_ERROR;
 	}
 	
