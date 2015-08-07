@@ -164,11 +164,14 @@
 #define MPU6050_GYRO_FS_1000        0x02
 #define MPU6050_GYRO_FS_2000        0x03
 
+<<<<<<< HEAD
 #define MPU6050_GYRO_FS_250_LSB         (float)131
 #define MPU6050_GYRO_FS_500_LSB         (float)65.5
 #define MPU6050_GYRO_FS_1000_LSB        (float)32.8
 #define MPU6050_GYRO_FS_2000_LSB        (float)16.4
 
+=======
+>>>>>>> 2fb89b191734984412ab9b61950f442911b42e58
 #define MPU6050_ACONFIG_XA_ST_BIT           7
 #define MPU6050_ACONFIG_YA_ST_BIT           6
 #define MPU6050_ACONFIG_ZA_ST_BIT           5
@@ -182,11 +185,14 @@
 #define MPU6050_ACCEL_FS_8          0x02
 #define MPU6050_ACCEL_FS_16         0x03
 
+<<<<<<< HEAD
 #define MPU6050_ACCEL_FS_2_LSB          (float)16384
 #define MPU6050_ACCEL_FS_4_LSB          (float)8192
 #define MPU6050_ACCEL_FS_8_LSB          (float)4096
 #define MPU6050_ACCEL_FS_16_LSB         (float)2048
 
+=======
+>>>>>>> 2fb89b191734984412ab9b61950f442911b42e58
 #define MPU6050_DHPF_RESET          0x00
 #define MPU6050_DHPF_5              0x01
 #define MPU6050_DHPF_2P5            0x02

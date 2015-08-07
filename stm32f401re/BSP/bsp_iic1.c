@@ -260,7 +260,11 @@ u8 IIC1readBytes(u8 dev, u8 reg, u8 length, u8 *data){
 		 	else  data[count]=IIC1_Read_Byte(0);	 //最后一个字节NACK
 	}
     IIC1_Stop();//产生一个停止条件
+<<<<<<< HEAD
     return 0;
+=======
+    return count;
+>>>>>>> 2fb89b191734984412ab9b61950f442911b42e58
 }
 
 /**************************实现函数********************************************
