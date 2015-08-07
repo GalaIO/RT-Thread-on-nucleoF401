@@ -31,6 +31,8 @@
 #define THREAD_STACK_ALLOC(name,size)			char name[RT_ALIGN(size,RT_ALIGN_SIZE)]
 /* 线程的TCB控制块 */
 #define THREAD_TCB_ALLOC(name)						struct rt_thread name
+#define THREAD_STACK_EXTERN(name,size)		extern char name[RT_ALIGN(size,RT_ALIGN_SIZE)]
+#define THREAD_TCB_EXTERN(name)						extern struct rt_thread name
 /* 启动一个使用 rt_thread_create创建的一个动态对象，另外该函数可以直接申请栈空间 所以必须先检查，然后启动*/
 #define THREAD_CHECK_STARTUP(thread)			if(thread!=RT_NULL)	rt_thread_startup(thread)
 /* 直接申请的全局变量，使用 rt_thread_init初始化即可，然后启动*/

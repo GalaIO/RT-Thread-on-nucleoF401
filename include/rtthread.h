@@ -26,10 +26,19 @@
  * 2007-03-03     Bernard      clean up the definitions to rtdef.h
  * 2010-04-11     yi.qiu       add module feature
  * 2013-06-24     Bernard      add rt_kprintf re-define when not use RT_USING_CONSOLE.
+ *
+ *	Author:		GalaIO
+ *	Date:			2015-8-2 10:57 PM
+ *	Description: 
+ *			--add new operation for dev->rx_sem;
+ *				rt_err_t rt_device_Rx_Done(rt_device_t dev);
+ *				rt_err_t rt_device_Rx_Wait(rt_device_t dev);
  */
 
 #ifndef __RT_THREAD_H__
 #define __RT_THREAD_H__
+//STM32 certain
+#include "stm32f4xx.h"
 
 #include <rtconfig.h>
 #include <rtdebug.h>
@@ -396,6 +405,16 @@ rt_device_set_tx_complete(rt_device_t dev,
 rt_err_t  rt_device_init (rt_device_t dev);
 rt_err_t  rt_device_open (rt_device_t dev, rt_uint16_t oflag);
 rt_err_t  rt_device_close(rt_device_t dev);
+/*@added GalaIO*/
+rt_err_t rt_device_Rx_Done(rt_device_t dev);
+/*@added GalaIO*/
+rt_err_t rt_device_Rx_Wait(rt_device_t dev);
+/*@added GalaIO*/
+rt_err_t rt_device_Tx_Done(rt_device_t dev);
+/*@added GalaIO*/
+rt_err_t rt_device_Tx_Wait(rt_device_t dev);
+/*@added GalaIO*/
+rt_device_t rt_device_find_open(const char *name, const char ochar);
 rt_size_t rt_device_read (rt_device_t dev,
                           rt_off_t    pos,
                           void       *buffer,
@@ -406,6 +425,17 @@ rt_size_t rt_device_write(rt_device_t dev,
                           rt_size_t   size);
 rt_err_t  rt_device_control(rt_device_t dev, rt_uint8_t cmd, void *arg);
 
+/*@added GalaIO, operate th device, especifily for stream device, like uart, net....*/
+extern int8_t rt_getc(rt_device_t device);
+extern int8_t rt_getss(rt_device_t device, char *str);
+extern int8_t rt_getBuff(rt_device_t device, char *buf, int length);
+extern int8_t rt_getBuf(const char *dev_name, char *buf, int length);
+extern int8_t rt_gets(const char *dev_name, char *str);
+extern void rt_printf(const char *dev_name,const char *fmt, ...);
+extern void rt_printff(rt_device_t device,const char *fmt, ...);
+extern void rt_putBuff(rt_device_t dev,const char *str, const int length);
+extern void rt_putBuf(const char *dev_name,const char *str, const int length);
+													
 /*@}*/
 #endif
 

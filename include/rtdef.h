@@ -29,6 +29,11 @@
  *                             RT_USING_MEMHEAP condition.
  * 2012-12-30     Bernard      add more control command for graphic.
  * 2013-01-09     Bernard      change version number.
+ *			
+ *
+ *	Author:		GalaIO
+ *	Date:			2015-8-2 8:19 PM
+ *	Description: add rt_sem_t for device to get data from RX
  */
 
 #ifndef __RT_DEF_H__
@@ -244,6 +249,7 @@ typedef int (*init_fn_t)(void);
 #define RT_ENOSYS                       6               /**< No system */
 #define RT_EBUSY                        7               /**< Busy */
 #define RT_EIO                          8               /**< IO error */
+#define RT_ECANNOT                      9               /**< can do this */
 
 /*@}*/
 
@@ -808,6 +814,12 @@ struct rt_device
     rt_uint8_t                ref_count;                /**< reference count */
     rt_uint8_t                device_id;                /**< 0 - 255 */
 
+		/*@added GalaIO, add rt_sem_t for device to get data from RX*/
+		rt_sem_t									rx_sem;										/** sem for noticing RX*/
+
+		/*@added GalaIO, add rt_sem_t for device to get data from TX*/
+		rt_sem_t									tx_sem;										/** sem for noticing TX*/
+	
     /* device call back */
     rt_err_t (*rx_indicate)(rt_device_t dev, rt_size_t size);
     rt_err_t (*tx_complete)(rt_device_t dev, void *buffer);

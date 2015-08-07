@@ -35,13 +35,17 @@
 
 //RTC  Real-Time-Clock
 #define RT_USING_NUCLEOF401_RTC
-#define RT_USING_NUCLEOF401_TIM2
+//#define RT_USING_NUCLEOF401_TIM2
 #define RT_USING_NUCLEOF401_TIM2_PWM
-#define RT_USING_NUCLEOF401_TIM3
+//#define RT_USING_NUCLEOF401_TIM3
 #define RT_USING_NUCLEOF401_TIM3_PWM
 //using ADC and inter-TEMP
-#define RT_USING_NUCLEOF401_ADC_TEMP
-#define RT_USING_NUCLEOF401_FLASH
+//#define RT_USING_NUCLEOF401_ADC_TEMP
+//#define RT_USING_NUCLEOF401_FLASH
+
+#define RT_USING_IIC1
+#define RT_USING_MPU6050
+#define RT_USING_DMP
 #endif
 
 
@@ -167,7 +171,7 @@
 /*
  *open RT_USING_UART1;
 */
-//#define RT_USING_UART1
+#define RT_USING_UART1
 #endif
 
 
@@ -184,6 +188,7 @@
  *open RT_USING_UART3;
 */
 //#define RT_USING_UART3
+//#define RT_USING_UART3_DMA
 #endif
 
 #endif

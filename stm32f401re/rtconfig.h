@@ -18,8 +18,8 @@
 #endif
 
 #ifndef RT_TICK_PER_SECOND
-/* Tick per Second  100hz 10ms*/
-#define RT_TICK_PER_SECOND	100
+/* Tick per Second  1000hz 1ms*/
+#define RT_TICK_PER_SECOND	1000
 #endif
 
 #ifndef RT_EVENT_LENGTH
