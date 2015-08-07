@@ -58,9 +58,10 @@ typedef struct RTC_DATE_TIME
 	uint8_t 	sec;	
 	uint8_t		AMoPM;
 	//亚秒(用于精确时间)
-	uint8_t		sub_sec;
+	uint16_t		sub_sec;
 }RDT_t;
 
+void setDefaultRTC(void);
 
 //sync the date and time to RTC.
 //@param pRDT		a point to a RTC struct.

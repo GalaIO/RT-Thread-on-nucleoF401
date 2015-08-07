@@ -77,6 +77,17 @@ const uint16_t Bak_Date_Time[] = {2015,7,23,1,55,00};
 const char DATE_WEEK_STR[][10] = {"1221","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"};
 
 
+void setDefaultRTC(){
+		RDT_t rdt;
+		rdt.year = Bak_Date_Time[0];
+		rdt.month = Bak_Date_Time[1];
+		rdt.day = Bak_Date_Time[2];
+		rdt.hour = Bak_Date_Time[3];
+		rdt.min = Bak_Date_Time[4];
+		rdt.sec = Bak_Date_Time[5];
+		RDT_sync(&rdt);
+}
+
 /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ** 函数名称: Init_RTC
 ** 功能描述: RTC初始化
@@ -85,7 +96,6 @@ const char DATE_WEEK_STR[][10] = {"1221","MONDAY","TUESDAY","WEDNESDAY","THURSDA
 u8 Init_RTC(void)
 {
 	RTC_InitTypeDef RTC_InitStructure;
-	RDT_t rdt;
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); //使能PER时钟
 																	//使能PWR和BKP外设时钟   		
 	PWR_BackupAccessCmd(ENABLE);									//使能RTC和后备寄存器访问 
@@ -105,13 +115,8 @@ u8 Init_RTC(void)
     RTC_Init(&RTC_InitStructure);
 		
 		//设置最原始时间，就像手机没有电池后，时间会变成厂家预设的
-		rdt.year = Bak_Date_Time[0];
-		rdt.month = Bak_Date_Time[1];
-		rdt.day = Bak_Date_Time[2];
-		rdt.hour = Bak_Date_Time[3];
-		rdt.min = Bak_Date_Time[4];
-		rdt.sec = Bak_Date_Time[5];
-		RDT_sync(&rdt);
+		setDefaultRTC();
+				
 		RTC_WriteBackupRegister(RTC_BKP_DR0, 0x5555);					//向指定的后备寄存器中写入用户程序数据0X5555做判断标志										
 	}																 	
 	//不是第一次配置 继续计时
@@ -158,48 +163,6 @@ uint8_t Check_Time(uint8_t hour,uint8_t min,uint8_t sec){
 	return 0;
 }
 
-#ifdef RTC_DEVICE_USING_SHARED_MEM
-//设置时钟
-//把输入的时钟转换为秒钟
-//以1970年1月1日为基准
-//1970~2099年为合法年份
-//返回值:0,成功;其他:错误代码.
-uint8_t Time_Update(uint16_t year,uint8_t month,uint8_t day,uint8_t hour,uint8_t min,uint8_t sec)
-{ 
-	uint8_t week;
-	if(Check_Date(year,month,day) || Check_Time(hour,min,sec)){
-		return 1;
-	}
-	week = RTC_Get_Week(year,month,day);
-	if(week>SUNDAY) return 1;
-	rtc_timer.year = year - Date_Benchmark[0];
-	rtc_timer.month = month;
-	rtc_timer.day = day;
-	rtc_timer.week = week+1;
-	rtc_timer.hour = hour;
-	rtc_timer.min = min;
-	rtc_timer.sec = sec;
-	rtc_timer.AMoPM = hour<12?RTC_H12_AM:RTC_H12_PM;
-	
-	//向RTC设置时间和日期
-	RTC_SetTime(RTC_Format_BIN,RTC_GET_TIMETYPE());
-	RTC_SetDate(RTC_Format_BIN,RTC_GET_DATETYPE());
-	
-	return 0;
-}
-
-//向RTC更新时间
-void Time_Get(void){
-	//向RTC获取时间和日期
-	RTC_GetTime(RTC_Format_BIN,RTC_GET_TIMETYPE());
-	RTC_GetDate(RTC_Format_BIN,RTC_GET_DATETYPE());
-
-	//获取 RTC的亚秒
-	rtc_timer.sub_sec = RTC_GetSubSecond();
-}
-
-#endif /*RTC_DEVICE_USING_SHARED_MEM*/
-
 
 //sync the date and time to RTC.
 //@param pRDT		a point to a RTC struct.
@@ -245,8 +208,8 @@ void RDT_gain(RDT_t *pRDT){
 	pRDT->year = dateType->RTC_Year;
 	pRDT->year += Date_Benchmark[0];
 
-	//获取 RTC的亚秒
-	pRDT->sub_sec = RTC_GetSubSecond();
+	//获取 RTC的亚秒, 注意亚秒是从高到低的，从1000 -- 0
+	pRDT->sub_sec = 1.0*RTC_GetSubSecond()*3.9;
 	
 	return ;
 }
