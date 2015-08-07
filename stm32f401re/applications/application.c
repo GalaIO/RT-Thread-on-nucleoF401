@@ -29,8 +29,8 @@ void button_keyDown_callback(){
 		rt_kprintf("the button is keyDown!!!\n");
 }
 
-static rt_bool_t LED_TOGGLE_ON = 0;
-THREAD_STACK_ALLOC(led_stack,256);
+static rt_bool_t LED_TOGGLE_ON = 1;
+THREAD_STACK_ALLOC(led_stack,512);
 THREAD_TCB_ALLOC(led_thread);
 static void rt_thread_entry_led1(void* parameter)
 {
@@ -171,7 +171,28 @@ void Flash_readCH(){
 
 #endif /* RT_USING_NUCLEOF401_FLASH*/
 
+#ifdef RT_USING_UART1
 
+void testUart1(){
+	
+	char str[12];
+	rt_printf("uart1","hello peple %d %f!!!\r\n",12,0.2);
+	rt_gets("uart1",str);
+	rt_printf("uart1","%s",str);
+	
+}
+
+#ifdef RT_USING_FINSH
+	FINSH_FUNCTION_EXPORT(testUart1,testUart1 function);
+#endif
+#endif /*RT_USING_UART1*/
+
+
+/*@{*/
+
+THREAD_STACK_ALLOC(dmp_stack,1024);
+THREAD_TCB_ALLOC(dmp_thread);
+extern void rt_thread_entry_dmp(void* parameter);
 int rt_application_init()
 {
     //------- init led1 thread
@@ -181,6 +202,14 @@ int rt_application_init()
                    RT_NULL,
                    &led_stack[0],
                    sizeof(led_stack),11,5);
+    //------- init dmp thread
+    rt_thread_init(&dmp_thread,
+                   "dmp",
+                   rt_thread_entry_dmp,
+                   RT_NULL,
+                   &dmp_stack[0],
+                   sizeof(dmp_stack),8,5);
+    rt_thread_startup(&dmp_thread);
     rt_thread_startup(&led_thread);
 
     return 0;

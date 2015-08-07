@@ -65,6 +65,9 @@ void assert_failed(u8* file, u32 line)
  */
 void rtthread_startup(void)
 {
+	//alloc memary first.
+  rt_system_heap_init((void*)STM32_SRAM_BEGIN, (void*)STM32_SRAM_END);
+	
 	/* init board */
 	rt_hw_board_init();
 
@@ -79,8 +82,6 @@ void rtthread_startup(void)
 
 	/* init timer system */
 	rt_system_timer_init();
-
-  rt_system_heap_init((void*)STM32_SRAM_BEGIN, (void*)STM32_SRAM_END);
 
 	/* init scheduler system */
 	rt_system_scheduler_init();
