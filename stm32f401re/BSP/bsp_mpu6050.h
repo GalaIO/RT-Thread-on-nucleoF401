@@ -377,7 +377,7 @@ uint8_t MPU6050_testConnection(void); //检测MPU6050是否存在
 uint8_t MPU6050_getDeviceID(void); //读取MPU6050的ID
 int Read_Temperature(void);
 void MPU6050ReadAcc(float *accData);
-void MPU6050ReadAccXYZ(float *ax,float *ay,float *az);
+void MPU6050ReadAccXYZ(int *ax,int *ay,int *az);
 void MPU6050ReadGyro(float *gyroData);
-void MPU6050ReadGyroXYZ(float *gx,float *gy,float *gz);
+void MPU6050ReadGyroXYZ(int *gx,int *gy,int *gz);
 #endif

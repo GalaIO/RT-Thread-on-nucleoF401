@@ -2974,9 +2974,9 @@ u8 mpu_dmp_init(void)
 		if(res)return 4; 
 		res=dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation));//设置陀螺仪方向
 		if(res)return 5; 
-		res=dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT|/*DMP_FEATURE_TAP|	//设置dmp功能
-		    DMP_FEATURE_ANDROID_ORIENT|*/DMP_FEATURE_SEND_RAW_ACCEL|DMP_FEATURE_SEND_CAL_GYRO|
-		    DMP_FEATURE_GYRO_CAL);
+		res=dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT/*|DMP_FEATURE_TAP|	//设置dmp功能
+		    DMP_FEATURE_ANDROID_ORIENT|DMP_FEATURE_SEND_RAW_ACCEL|DMP_FEATURE_SEND_CAL_GYRO|
+		    DMP_FEATURE_GYRO_CAL*/);
 		if(res)return 6; 
 		res=dmp_set_fifo_rate(DEFAULT_MPU_HZ);	//设置DMP输出速率(最大不超过200Hz)
 		if(res)return 7;   

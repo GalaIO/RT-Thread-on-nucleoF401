@@ -93,24 +93,22 @@ void MPU6050_setI2CBypassEnabled(uint8_t enabled) {
 void MPU6050ReadAcc(float *accData)
 {
     u8 buf[6];
+		short tmp;
     IIC1readBytes(devAddr,MPU6050_ACC_OUT, 6,buf);
-    accData[0] = (buf[0] << 8) | buf[1];
-		accData[0] /= MPU6050_ACCEL_FS_2_LSB; 
-    accData[1] = (buf[2] << 8) | buf[3];
-		accData[1] /= MPU6050_ACCEL_FS_2_LSB;
-    accData[2] = (buf[4] << 8) | buf[5];
-		accData[2] /= MPU6050_ACCEL_FS_2_LSB;
+    tmp = (buf[0] << 8) | buf[1];
+		accData[0] = 1.0*tmp / MPU6050_ACCEL_FS_2_LSB; 
+    tmp = (buf[2] << 8) | buf[3];
+		accData[1] = 1.0*tmp / MPU6050_ACCEL_FS_2_LSB;
+    tmp = (buf[4] << 8) | buf[5];
+		accData[2] = 1.0*tmp / MPU6050_ACCEL_FS_2_LSB;
 }
-void MPU6050ReadAccXYZ(float *ax,float *ay,float *az)
+void MPU6050ReadAccXYZ(int *ax,int *ay,int *az)
 {
     u8 buf[6];
     IIC1readBytes(devAddr,MPU6050_ACC_OUT, 6,buf);
     *ax = (buf[0] << 8) | buf[1];
-		*ax /= MPU6050_ACCEL_FS_2_LSB;
     *ay = (buf[2] << 8) | buf[3];
-		*ay /= MPU6050_ACCEL_FS_2_LSB;
     *az = (buf[4] << 8) | buf[5];
-		*az /= MPU6050_ACCEL_FS_2_LSB;
 		
 }
 /**************************实现函数********************************************
@@ -120,24 +118,22 @@ void MPU6050ReadAccXYZ(float *ax,float *ay,float *az)
 void MPU6050ReadGyro(float *gyroData)
 {
     u8 buf[6];
+		short tmp;
     IIC1readBytes(devAddr,MPU6050_GYRO_OUT,6,buf);
-    gyroData[0] = (buf[0] << 8) | buf[1];
-		gyroData[0] /= MPU6050_GYRO_FS_1000_LSB; 
-    gyroData[1] = (buf[2] << 8) | buf[3];
-		gyroData[1] /= MPU6050_GYRO_FS_1000_LSB; 
-    gyroData[2] = (buf[4] << 8) | buf[5];
-		gyroData[2] /= MPU6050_GYRO_FS_1000_LSB; 
+    tmp = (buf[0] << 8) | buf[1];
+		gyroData[0] = 1.0*tmp / MPU6050_GYRO_FS_1000_LSB; 
+    tmp = (buf[2] << 8) | buf[3];
+		gyroData[1] = 1.0*tmp / MPU6050_GYRO_FS_1000_LSB; 
+    tmp = (buf[4] << 8) | buf[5];
+		gyroData[2] = 1.0*tmp / MPU6050_GYRO_FS_1000_LSB; 
 }
-void MPU6050ReadGyroXYZ(float *gx,float *gy,float *gz)
+void MPU6050ReadGyroXYZ(int *gx,int *gy,int *gz)
 {
     u8 buf[6];
     IIC1readBytes(devAddr,MPU6050_GYRO_OUT,6,buf);
     *gx = (buf[0] << 8) | buf[1];
-		*gx /= MPU6050_GYRO_FS_1000_LSB;
     *gy = (buf[2] << 8) | buf[3];
-		*gy /= MPU6050_GYRO_FS_1000_LSB;
     *gz = (buf[4] << 8) | buf[5];
-		*gz /= MPU6050_GYRO_FS_1000_LSB;
 }
 /**************************************************************************
 函数功能：读取MPU6050内置温度传感器数据
