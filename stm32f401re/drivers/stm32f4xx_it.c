@@ -231,7 +231,7 @@ extern void dmp_device_isr(void);
 void EXTI4_IRQHandler(){
     /* enter interrupt */
     rt_interrupt_enter();
-		rt_kprintf("i am in smp_device_isr!\r\n");
+		//rt_kprintf("i am in smp_device_isr!\r\n");
 		if(isEXTI(BIT4)){
 			
 			//isr handler.

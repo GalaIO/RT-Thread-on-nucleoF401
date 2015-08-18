@@ -57,9 +57,9 @@
 #include "bsp_iic1.h"
 #ifdef RT_USING_MPU6050
 #include "bsp_mpu6050.h"
+#include "mpu6050_dmp.h"
 #ifdef RT_USING_DMP
 #include "inv_mpu.h"
-#include "mpu6050_dmp.h"
 #endif
 #endif
 #endif
@@ -97,6 +97,8 @@ void nucleo_borad_init(){
 #ifdef RT_USING_MPU6050
 		MPU6050_init();
 		rt_kprintf("the id of mpu6050 is %x \r\n",MPU6050_getDeviceID());
+		//then init the device.you can get acce and gyro data, donnot matter if the dmp is inited.
+		dmp_device_register(DMP_DEVICE_NAME);
 #ifdef RT_USING_DMP
 		while(1){
 			int error_info = mpu_dmp_init();
@@ -114,8 +116,6 @@ void nucleo_borad_init(){
 			LED_ON();
 			delayMS(200);
 		}
-		//then init the device.
-		dmp_device_register(DMP_DEVICE_NAME);
 		//init the INT_RX, PA4;
 		RCC_CMD(PA_PER);
 		PAIN_INT(BIT4);

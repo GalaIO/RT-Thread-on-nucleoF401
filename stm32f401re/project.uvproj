@@ -425,6 +425,11 @@
               <FileType>1</FileType>
               <FilePath>.\applications\dmp_task.c</FilePath>
             </File>
+            <File>
+              <FileName>finish_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\finish_cmd.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -519,6 +524,26 @@
               <FileName>mpu6050_dmp.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\drivers\mpu6050_dmp.h</FilePath>
+            </File>
+            <File>
+              <FileName>rtdebug.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\include\rtdebug.h</FilePath>
+            </File>
+            <File>
+              <FileName>filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\drivers\filter.h</FilePath>
+            </File>
+            <File>
+              <FileName>PID.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\PID.c</FilePath>
             </File>
           </Files>
         </Group>
