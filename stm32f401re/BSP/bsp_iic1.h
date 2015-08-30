@@ -3,7 +3,14 @@
  *	Date:			2015-7-26 10:12 AM
  *	Description:
  *			code a simulate IIC1 driver.
- *			
+ *                      Pin assignment:
+ *             ------------------------------------
+ *             |       STM32F401x   IIC1          |
+ *             ------------------------------------
+ *             | PB8           |   I2C1_SCL       |
+ *             | PB9           |   I2C1_SDA       |
+ *             ------------------------------------
+ *
 **/
 
 #ifndef _BSP_IIC11_H_
