@@ -128,8 +128,8 @@ static rt_err_t dmp_device_control(rt_device_t dev,rt_uint8_t cmd,void *args){
 					MPU6050ReadAcc(acce);
 					MPU6050ReadGyro(gyro);
 					
-					folR.last = fol_filter(folR.K,folR.last+(float)0.02*gyro[0],atan(acce[1]/acce[2])*57.32);
-					folP.last = fol_filter(folP.K,folP.last+(float)0.02*gyro[1],atan(acce[0]/acce[2])*57.32);
+					folR.last = fol_filter(folR.K,folR.last+(float)0.02*gyro[0],atan2(acce[1]/acce[2])*57.32);
+					folP.last = fol_filter(folP.K,folP.last+(float)0.02*gyro[1],atan2(acce[0]/acce[2])*57.32);
 					
 					temp[0] = folR.last;
 					temp[1] = -folP.last;
