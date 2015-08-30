@@ -27,7 +27,7 @@
 #ifdef RT_DEBUG
 
 #ifndef RT_DEBUG_DEVICE
-#define RT_DEBUG_DEVICE  								 1
+#define RT_DEBUG_DEVICE  							 1
 #endif
 
 #ifndef RT_RTC_DEVICE
@@ -35,7 +35,11 @@
 #endif
 
 #ifndef RT_DMP_DEVICE
-#define RT_DMP_DEVICE  								 1
+#define RT_DMP_DEVICE  								 0
+#endif
+
+#ifndef RT_NRF2401_DEVICE
+#define RT_NRF2401_DEVICE  						 1
 #endif
 
 /* Turn on some of these (set to non-zero) to debug kernel */
