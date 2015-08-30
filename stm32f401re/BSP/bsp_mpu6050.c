@@ -1,4 +1,23 @@
-
+/*
+ *	Author:		GalaIO
+ *	Date:			2015-7-26 10:12 AM
+ *	Description:
+ *			code a simulate IIC1 driver.
+ *              Pin assignment:
+ *             --------------------
+ *             |      MPU6050     |
+ *             --------------------
+ *             | VCC-3.3V         |
+ *             | GND           		|  
+ *             | SCL-I2C-SCL-PB8  |
+ *             | SDA-I2C-SDA-PB9  |  
+ *             | XDA-NC           |
+ *             | XCL-NC           |  
+ *             | ADO-GND          |
+ *             | INT-EXTI-PA4     |  
+ *             --------------------
+ *
+**/
 #include "bsp_mpu6050.h"
 
 /**************************ÊµÏÖº¯Êý********************************************
