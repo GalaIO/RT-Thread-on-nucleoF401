@@ -352,11 +352,11 @@ static float PIDIncreDTB_pop(PIDIncreDTB_t *pid,float feedback){
 	//判断偏差是否在死区控制区
 	if(fabs(pid->__bias) > fabs(pid->__stable)*pid->__dline){
 		//在死区外，不累积积分项
-		pid->control += pid->__Kp*(pid->__bias-pid->__lbias) + pid->__Kd*(pid->__bias-2.0*pid->__lbias+pid->__llbias);
+		pid->control += pid->__Kp*(pid->__bias-pid->__lbias) + pid->__Kd*(pid->__bias-(float)2.0*pid->__lbias+pid->__llbias);
 	
 	}else{
 		//在死区内，开始计算时间权值与偏差权值，知道等于预设的Ki 
-		pid->__tKi = pid->__Ki*(1-fabs(pid->__bias)/fabs(pid->__stable*pid->__dline))*(1.0/(float)pid->__itime);
+		pid->__tKi = pid->__Ki*(1-fabs(pid->__bias)/fabs(pid->__stable*pid->__dline))*((float)1.0/(float)pid->__itime);
 		//更新__itime
 		if(pid->__itime > 1){
 			pid->__itime--;
