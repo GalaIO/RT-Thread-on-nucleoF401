@@ -20,8 +20,8 @@
  *																													D15		PB8  -10-	I2C1_SCL//,TIM4_CH3
  *																													D14		PB9	 -9-	I2C1_SDA//,TIM4_CH4
  *																						   								 AVDD  -8-
- *			-1-  NC																	 								 GND	 -7-
- *			-2-  IOREF																					D13		PA5	 -6-  SPI1_SCK//,TIM2_CH1,ADC1_IN5
+ *			-1-  NC																	 								  GND	 -7-
+ *			-2-  IOREF																					D13	 PB13	 -6-  User_LED//
  *			-3-  RESET																					D12		PA6  -5-	SPI1_MISO//,TIM3_CH1,ADC1_IN6
  *			-4-  +3V3																						D11		PA7  -4-	SPI1_MOSI//,TIM1_CH1N,TIM3_CH2,ADC1_IN7
  *			-5-  +5V																						D10		PB6  -3-	SPI1_CS//,TIM4_CH1
@@ -36,7 +36,8 @@
  *			-5-  PC1	A4	ADC1_IN11//														D2	 PA10  -3-	USART1_RX//,TIM1_CH3
  *      -6-	 PC0	A5	ADC1_IN10//														D1		PA2	 -2-  USART2_TX//,TIM2_CH3,TIM5_CH3,ADC1_IN2
  *																													D0	  PA3  -1-  USART2_RX//,TIM2_CH4,TIM5_CH4,ADC1_IN3
- *
+ *		Note:需要注意的是对于SPI1，PA5-SPI1_SCK//,TIM2_CH1,ADC1_IN5，不在上面。
+ *					PC13-User_button。
 **/
 // <<< Use Configuration Wizard in Context Menu >>>
 #ifndef __BOARD_H__
@@ -84,12 +85,12 @@ void rt_hw_board_init(void);
 
 //User LED on nucleo borad.
 #define LED_INIT()	{\
-RCC_CMD(PA_PER);\
-PAOUT_INT(BIT5);\
+RCC_CMD(PB_PER);\
+PBOUT_INT(BIT13);\
 }
-#define LED_ON()		PAOUT_SET(BIT5)
-#define LED_OFF()		PAOUT_CLR(BIT5)
-#define LED_TOG()		PAOUT_TOG(BIT5)
+#define LED_ON()		PBOUT_SET(BIT13)
+#define LED_OFF()		PBOUT_CLR(BIT13)
+#define LED_TOG()		PBOUT_TOG(BIT13)
 
 #else
 
