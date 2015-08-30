@@ -19,6 +19,9 @@
 #ifndef _RTUSING_H_
 #define _RTUSING_H_
 
+///using RTOS
+#define RT_USING_RTOS
+
 ///
 ///
 ////target board.
@@ -35,17 +38,30 @@
 
 //RTC  Real-Time-Clock
 #define RT_USING_NUCLEOF401_RTC
+
 //#define RT_USING_NUCLEOF401_TIM2
 //#define RT_USING_NUCLEOF401_TIM2_PWM
+
 //#define RT_USING_NUCLEOF401_TIM3
 //#define RT_USING_NUCLEOF401_TIM3_PWM
+
 //using ADC and inter-TEMP
 //#define RT_USING_NUCLEOF401_ADC_TEMP
+
 //#define RT_USING_NUCLEOF401_FLASH
 
 //#define RT_USING_IIC1
+//#if defined(RT_USING_IIC1)
 //#define RT_USING_MPU6050
+//#if defined(RT_USING_MPU6050)
 //#define RT_USING_DMP
+//#endif
+//#endif
+
+#define RT_USING_SPI1
+#if defined(RT_USING_SPI1)
+#define RT_USING_NRF2401
+#endif
 #endif
 
 
