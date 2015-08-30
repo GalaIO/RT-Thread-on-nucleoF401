@@ -1,16 +1,17 @@
-/******************** (C) COPYRIGHT 2007 STMicroelectronics ********************
+/******************************************************************************
+*	Author:		GalaIO
+*	Date:			2015-8-22 10:07 PM
+*	Description:
+*		code the spi1.
 *                      Pin assignment:
-*             ----------------------------------------------
-*             |  STM32F10x    |     MSD          Pin        |
-*             ----------------------------------------------
-*             | PA.4          |   ChipSelect      1         |
-*             | PA.7 / MOSI   |   DataIn          2         |
-*             |               |   GND             3 (0 V)   |
-*             |               |   VDD             4 (3.3 V) |
-*             | PA.5 / SCLK   |   Clock           5         |
-*             |               |   GND             6 (0 V)   |
-*             | PA.6 / MISO   |   DataOut         7         |
-*             -----------------------------------------------
+*             ------------------------------------
+*             |       STM32F401x   SPI1        |
+*             ------------------------------------
+*             | PB6           |   ChipSelect   |
+*             | PA7 / MOSI    |   DataIn       |
+*             | PA5	/SCK	    |   Clock        |
+*             | PA6 / MISO    |   DataOut      |
+*             -------------------------------------
 *******************************************************************************/
 
 #ifndef  _BSP_SPI1_H_
@@ -19,22 +20,36 @@
 #include "bsp_gpio.h"
 #include "bsp_sys.h"
 
-#define	 SPI1_CS_PORT     GPIOA
-#define	 SPI1_CS_PIN	  GPIO_Pin_4
-#define	 SPI1_NO		  SPI1
-#define	 SPI1_PORT	 	  GPIOA
-#define	 SPI1_MISO	 	  GPIO_Pin_6
-#define	 SPI1_MOSI	 	  GPIO_Pin_7
-#define  SPI1_SCK		  GPIO_Pin_5
+/*@GalaIO， 定义SPI1的配置 */
+#define SET_SPI1_CPOL					SPI_CPOL_Low
+#define SET_SPI1_CPHA					SPI_CPHA_1Edge
+#define SET_SPI1_BAUDPRE			SPI_BaudRatePrescaler_8
+#define SET_SPI1_HIGHSPEED		SPI_BaudRatePrescaler_8
+#define SET_SPI1_FIRSTBIT			SPI_FirstBit_MSB
 
-//SPI1 进行初始化
+/*
+ *初始化SPI1.
+**/
 void SPI1_Init(void);
+/*
+ *提高SPI1 读写速度
+**/
+void SPI1_HightSpeed(void); 
  
-  
-//进行移植时,需要修改
-void SPI1_HightSpeed(void);
- 
-//进行移植时,需要修改
+/*
+ * SPI读写一个字节（发送完成后返回本次通讯读取的数据）
+ *
+ * @Param, TxData 待发送的数据
+ *
+ * @Return, 接收到的数据
+ *
+**/
 u8 SPI1_ReadWrite(u8 TxData);
+
+
+/*
+*a dummy operation for rollup a SPI transport.
+*/
+#define SPI1_DUMMY()		SPI1_ReadWrite(0xFF)
 
 #endif
