@@ -44,7 +44,7 @@
 
 #include "stm32f4xx.h"
 #include "board.h"
-
+#include "rtuser.h"
 /**
  * @addtogroup STM32
  */
@@ -75,65 +75,74 @@
 #endif
 #endif
 
+//config ENC28J60
+#ifdef RT_USING_SPI3
+#ifdef RT_USING_ENC28J60
+#include "bsp_enc28j60.h"
+#include "n2IP.h"
+extern Netif_t eth_if;
+#endif
+#endif
+
 void nucleo_borad_init(){
-		rt_kprintf(">init the borad resource!\r\n");
+		user_log(NUCLEO_BOARD, "init the borad resource!");
 #ifdef RT_USING_NUCLEOF401_RTC
 		//start RTC.
-		rt_kprintf("->startup the inter-RTC!\r\n");
+		user_log(NUCLEO_BOARD, "/ startup the inter-RTC!");
 		RTC_START();
 
-		rt_kprintf("-->register the RTC device!\r\n");
+		user_log(NUCLEO_BOARD, "// register the RTC device!");
 		rdt_device_register("rdt");
 	
 #endif
 	
-		rt_kprintf("->init user LED!\r\n");
+		user_log(NUCLEO_BOARD, "/ init user LED!");
 		LED_INIT();
-		rt_kprintf("->init user BUTTON!\r\n");
+		user_log(NUCLEO_BOARD, "/ init user BUTTON!");
 		BUTTON_INIT();		
 
 #ifdef RT_USING_NUCLEOF401_TIM2
 		//init TIM2 update.
-		rt_kprintf("->init TIM2!\r\n");
+		user_log(NUCLEO_BOARD, "/ init TIM2!");
 		TIM2_START_US(1000);
 	
 #ifdef RT_USING_NUCLEOF401_TIM2_PWM	
 		//init PA0 PWM
-		rt_kprintf("-->init TIM2's PA0 PWM!\r\n");
+		user_log(NUCLEO_BOARD, "// init TIM2's PA0 PWM!");
 		TIM2_PWM_PA0(500);
-		rt_kprintf("-->init TIM2's PA1 PWM!\r\n");
+		user_log(NUCLEO_BOARD, "// init TIM2's PA1 PWM!");
 		TIM2_PWM_PA1(500);
 #endif
 
 #endif
 	
 #ifdef RT_USING_NUCLEOF401_ADC_TEMP
-		rt_kprintf("->init STM32 inter-TEMP!\r\n");
+		user_log(NUCLEO_BOARD, "/ init STM32 inter-TEMP!");
 		ADC_INERTEMP_INIT();
 #endif
 
 #ifdef RT_USING_IIC1
-		rt_kprintf("->init the MPU6050 with IIC1 !\r\n");
-		rt_kprintf("-->init the IIC1!\r\n");
+		user_log(NUCLEO_BOARD, "/ init the MPU6050 with IIC1 !");
+		user_log(NUCLEO_BOARD, "// init the IIC1!");
 		IIC1_Init();
 #ifdef RT_USING_MPU6050
-	  rt_kprintf("-->init the MPU6050!\r\n");
+	  user_log(NUCLEO_BOARD, "// init the MPU6050!");
 		MPU6050_init();
-		rt_kprintf("--->init finish,get ID %x \r\n",MPU6050_getDeviceID());
+		user_log(NUCLEO_BOARD, "/// init finish,get ID %x \r\n",MPU6050_getDeviceID());
 		//then init the device.you can get acce and gyro data, donnot matter if the dmp is inited.
-		rt_kprintf("--->register the DMP_DEVICE on RT_Thread Kernel!\r\n");
+		user_log(NUCLEO_BOARD, "/// register the DMP_DEVICE on RT_Thread Kernel!");
 		dmp_device_register(DMP_DEVICE_NAME);
 #ifdef RT_USING_DMP
-	  rt_kprintf("-->init the DMP module MPU6050!\r\n");
+	  user_log(NUCLEO_BOARD, "// init the DMP module MPU6050!");
 		while(1){
 			int error_info = mpu_dmp_init();
 			if ( error_info != 0 )
 			{
-				rt_kprintf( "--->init DMP WAITING with error %d!\r\n", error_info );
+				user_log(NUCLEO_BOARD, "/// init DMP WAITING with error %d!", error_info );
 			}
 			else
 			{
-				rt_kprintf( "--->init DMP SUCCESS!\r\n" );
+				user_log(NUCLEO_BOARD, "/// init DMP SUCCESS!" );
 				break;
 			}
 			LED_OFF();
@@ -142,7 +151,7 @@ void nucleo_borad_init(){
 			delayMS(200);
 		}
 		//init the INT_RX, PA4;
-		rt_kprintf( "--->init DMP IRQ(PA4) for Receiving Data!\r\n" );
+		user_log(NUCLEO_BOARD, "/// init DMP IRQ(PA4) for Receiving Data!" );
 		RCC_CMD(PA_PER);
 		PAIN_INT(BIT4);
 		//SYSCFG_ENABLE();
@@ -156,20 +165,38 @@ void nucleo_borad_init(){
 
 #ifdef RT_USING_SPI1
 #ifdef RT_USING_NRF2401
-		rt_kprintf("->init the 2401 and check it!\r\n");
+		user_log(NUCLEO_BOARD, "/ init the 2401 and check it!");
 		NRF24L01_Init();
 		while(NRF24L01_Check()){
-			rt_kprintf("-->2401 check error!\r\n-->check the conect or code!\r\n");
+			user_log(NUCLEO_BOARD, "// 2401 check error!\r\n-->check the conect or code!");
 			LED_OFF();
 			delayMS(200);
 			LED_ON();
 			delayMS(200);
 		}
-		rt_kprintf("-->2401 check OK!\r\n");
+		user_log(NUCLEO_BOARD, "// 2401 check OK!");
 		dmp_device_register("2401");
-		rt_kprintf("-->register nrf2401 device on RT-Thread Kernel!\r\n");
+		user_log(NUCLEO_BOARD, "// register nrf2401 device on RT-Thread Kernel!");
 #endif
 #endif		
+		
+
+#ifdef RT_USING_SPI3
+#ifdef RT_USING_ENC28J60
+		user_log(NUCLEO_BOARD, "/ init the enc28j60 and check it!");
+		user_log(NUCLEO_BOARD, "// init %s!",ENC28J60_Init()?"Failed":"Successful");
+		user_log(NUCLEO_BOARD, "// check the version is %x!",ENC28J60_Get_EREVID());
+		//init ethernetif .
+		user_log(NUCLEO_BOARD, "// init the eth_if with code %d!",ethernetif_initParams(&eth_if,
+															(char *)ENC28J60_Get_Mac(), "219.245.65.240", "219.245.65.254", "255.255.255.0"));
+//		user_log(NUCLEO_BOARD, "// init the eth_if with code %d!",ethernetif_initParams(&eth_if,
+//															(char *)ENC28J60_Get_Mac(), "192.168.1.8", "192.168.1.1", "255.255.255.0"));
+		//add low_output interface.
+		eth_if.low_output = (err_t (*)(U8_t *,U32_t ))ENC28J60_Packet_Send;
+		//init n2IP kernel.
+		user_log(NUCLEO_BOARD, "// init the n2IP kernel with code %d!",n2IP_init());
+#endif
+#endif
 		
 }
 
@@ -183,11 +210,11 @@ void nucleo_borad_init(){
 void NVIC_Configuration(void)
 {
 #ifdef  VECT_TAB_RAM
-	/* Set the Vector Table base location at 0x20000000 */
-	NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
+		/* Set the Vector Table base location at 0x20000000 */
+		NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
 #else  /* VECT_TAB_FLASH  */
-	/* Set the Vector Table base location at 0x08000000 */
-	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
+		/* Set the Vector Table base location at 0x08000000 */
+		NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
 #endif
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
@@ -205,25 +232,21 @@ void  SysTick_Configuration(void)
 	RCC_ClocksTypeDef  rcc_clocks;
 	rt_uint32_t         cnts;
 	
-	rt_kprintf("->init SYSTICK for RT-Thread Schedule Tick!\r\n");
+	user_log(NUCLEO_BOARD, "/ init SYSTICK for RT-Thread Schedule Tick!");
 	RCC_GetClocksFreq(&rcc_clocks);
 
 	cnts = (rt_uint32_t)rcc_clocks.HCLK_Frequency / RT_TICK_PER_SECOND;
-	rt_kprintf("\r\n-->-------*****************---------\r\n"
-		"-->    the system clock: %u Hz\r\n"
-		"-->    the  AHB   clock: %u Hz\r\n"
-		"-->    the  APB1  clock: %u Hz\r\n"
-		"-->    the  APB2  clock: %u Hz\r\n"
-	  "-->-------*****************---------\r\n",
-		(rt_uint32_t)rcc_clocks.SYSCLK_Frequency,
-		(rt_uint32_t)rcc_clocks.HCLK_Frequency,
-		(rt_uint32_t)rcc_clocks.PCLK1_Frequency,
-		(rt_uint32_t)rcc_clocks.PCLK2_Frequency);
+	user_log(NUCLEO_BOARD, "// -------*****************---------");
+	user_log(NUCLEO_BOARD, "//     the system clock: %u Hz", (rt_uint32_t)rcc_clocks.SYSCLK_Frequency);
+	user_log(NUCLEO_BOARD, "//     the  AHB   clock: %u Hz", (rt_uint32_t)rcc_clocks.HCLK_Frequency);
+	user_log(NUCLEO_BOARD, "//     the  APB1  clock: %u Hz", (rt_uint32_t)rcc_clocks.PCLK1_Frequency);
+	user_log(NUCLEO_BOARD, "//     the  APB2  clock: %u Hz", (rt_uint32_t)rcc_clocks.PCLK2_Frequency);
+	user_log(NUCLEO_BOARD, "// -------*****************---------");
 	//check the macro configuration correct?
 	if((rt_uint32_t)rcc_clocks.SYSCLK_Frequency != SYSCLK_HZ 
 			&& (rt_uint32_t)rcc_clocks.PCLK1_Frequency != PCLK1_HZ
 			&& (rt_uint32_t)rcc_clocks.PCLK2_Frequency != PCLK2_HZ){
-			rt_kprintf("-->That's horrible ! Your configuration is wrong ,find it and trap it !\r\n");
+			user_log(NUCLEO_BOARD, "// That's horrible ! Your configuration is wrong ,find it and trap it !\r\n");
 			while(1);	
 	}
 	cnts = cnts / 8;
@@ -261,6 +284,10 @@ void rt_hw_board_init()
 	//init the console, for debug sonmethhing.
 	rt_console_set_device(CONSOLE_DEVICE);
 #endif
+	
+	/* show version */
+	rt_show_version();
+	
 	nucleo_borad_init();
 	
 	/* Configure the SysTick */

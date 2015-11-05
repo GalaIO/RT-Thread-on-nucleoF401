@@ -45,9 +45,16 @@ THREAD_TCB_ALLOC(nrf2401_thread);
 extern void rt_thread_entry_2401(void* parameter);
 #endif
 
+#ifdef RT_USING_ENC28J60
+//enc28j60 task info.
+THREAD_STACK_ALLOC(enc28j60_stack,1024);
+THREAD_TCB_ALLOC(enc28j60_thread);
+extern void rt_thread_entry_enc28j60(void* parameter);
+#endif
+
 int rt_application_init()
 {
-		rt_kprintf(">init those application!\r\n");
+		user_log(APP_INIT, "/ init those application!");
     //------- init led1 thread
     rt_thread_init(&led_thread,
                    "led1",
@@ -56,7 +63,7 @@ int rt_application_init()
                    &led_stack[0],
                    sizeof(led_stack),11,5);
     rt_thread_startup(&led_thread);
-		rt_kprintf("->setup the LED Thread!\r\n");
+		user_log(APP_INIT, "// setup the LED Thread!\r\n");
 #ifdef RT_USING_MPU6050
     //------- init dmp thread
     rt_thread_init(&dmp_thread,
@@ -66,11 +73,11 @@ int rt_application_init()
                    &dmp_stack[0],
                    sizeof(dmp_stack),8,5);
     rt_thread_startup(&dmp_thread);
-		rt_kprintf("->setup the MPU6050-DMP Thread!\r\n");
+		user_log(APP_INIT, "// setup the MPU6050-DMP Thread!\r\n");
 #endif
 	
 #ifdef RT_USING_NRF2401
-    //------- init dmp thread
+    //------- init 2401 thread
     rt_thread_init(&nrf2401_thread,
                    "nrf2401",
                    rt_thread_entry_2401,
@@ -78,7 +85,19 @@ int rt_application_init()
                    &nrf2401_stack[0],
                    sizeof(nrf2401_stack),9,5);
     rt_thread_startup(&nrf2401_thread);
-		rt_kprintf("->setup the NRF24L01 Thread!\r\n");
+		user_log(APP_INIT, "// setup the NRF24L01 Thread!\r\n");
+#endif
+	
+#ifdef RT_USING_ENC28J60
+    //------- init enc28j60 thread
+    rt_thread_init(&enc28j60_thread,
+                   "enc28j60",
+                   rt_thread_entry_enc28j60,
+                   RT_NULL,
+                   &enc28j60_stack[0],
+                   sizeof(enc28j60_stack),9,5);
+    rt_thread_startup(&enc28j60_thread);
+		user_log(APP_INIT, "// setup the ENC28j60 Thread!\r\n");
 #endif
 
     return 0;
