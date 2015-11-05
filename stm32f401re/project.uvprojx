@@ -349,7 +349,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -369,14 +369,14 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F401xx,STM32F401xE,MOTION_DRIVER_TARGET_RTTHREAD_STM32F4,MPU6050,</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\components\finsh;..\include;..\libcpu\arm\common;..\libcpu\arm\cortex-m4;Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;Libraries\CMSIS\Include;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\STM32F4xx_StdPeriph_Driver\inc;applications;drivers;.\BSP;.\eMPL</IncludePath>
+              <IncludePath>.;..\components\finsh;..\include;..\libcpu\arm\common;..\libcpu\arm\cortex-m4;Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;Libraries\CMSIS\Include;Libraries\CMSIS\ST\STM32F4xx\Include;Libraries\STM32F4xx_StdPeriph_Driver\inc;applications;drivers;.\BSP;.\eMPL;..\components\net\n2IP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
             <interw>1</interw>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <thumb>0</thumb>
+            <thumb>1</thumb>
             <SplitLS>0</SplitLS>
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
@@ -436,6 +436,11 @@
               <FileName>2401_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\2401_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>enc28j60_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\enc28j60_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1062,6 +1067,26 @@
               <FileType>5</FileType>
               <FilePath>.\BSP\bsp_24l01.h</FilePath>
             </File>
+            <File>
+              <FileName>bsp_enc28j60.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_enc28j60.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_enc28j60.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_enc28j60.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_spi3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_spi3.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_spi3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BSP\bsp_spi3.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1096,6 +1121,66 @@
               <FileName>inv_mpu_dmp_motion_driver.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\eMPL\inv_mpu_dmp_motion_driver.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>n2IP</GroupName>
+          <Files>
+            <File>
+              <FileName>misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\misc.c</FilePath>
+            </File>
+            <File>
+              <FileName>n2IP.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\net\n2IP\n2IP.h</FilePath>
+            </File>
+            <File>
+              <FileName>ethernetif.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\ethernetif.c</FilePath>
+            </File>
+            <File>
+              <FileName>ipv4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\ipv4.c</FilePath>
+            </File>
+            <File>
+              <FileName>n2IP_socket.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\net\n2IP\n2IP_socket.h</FilePath>
+            </File>
+            <File>
+              <FileName>arp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\arp.c</FilePath>
+            </File>
+            <File>
+              <FileName>n2IP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\n2IP.c</FilePath>
+            </File>
+            <File>
+              <FileName>n2IP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\net\n2IP\n2IP_config.h</FilePath>
+            </File>
+            <File>
+              <FileName>icmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\icmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>udp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\udp.c</FilePath>
+            </File>
+            <File>
+              <FileName>tcp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\net\n2IP\tcp.c</FilePath>
             </File>
           </Files>
         </Group>

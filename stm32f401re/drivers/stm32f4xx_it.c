@@ -224,6 +224,24 @@ void EXTI15_10_IRQHandler(){
 }
 #endif
 
+#ifdef RT_USING_ENC28J60
+#include "bsp_gpio.h"
+#include "bsp_exti.h"
+extern	void ENC28J60_ISR(void);
+void EXTI9_5_IRQHandler(){
+    /* enter interrupt */
+    rt_interrupt_enter();
+		if(isEXTI(BIT8)){
+			
+			ENC28J60_ISR();
+			
+			clrEXTI(BIT8);
+		}
+    /* leave interrupt */
+    rt_interrupt_leave();
+}
+#endif
+
 #if defined(RT_DMP_DEVICE) && defined(RT_USING_MPU6050) && defined(RT_USING_DMP)
 #include "bsp_gpio.h"
 #include "bsp_exti.h"

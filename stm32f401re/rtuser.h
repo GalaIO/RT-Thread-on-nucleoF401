@@ -20,12 +20,16 @@
 #ifndef _RTUSER_H_
 #define _RTUSER_H_
 
+/*----------------------------------------------------Head Resource------------------------------------------------------------*/
 //f4 资源
 #include "stm32f4xx.h"
 //板载资源
 #include <board.h>
 /* 因为要使用RT-Thread的线程服务，需要包含RT-Thread的头文件 */
 #include <rtthread.h>
+
+
+/*----------------------------------------------------Thread Interface------------------------------------------------------------*/
 /* 线程用到的栈，由于ARM为4字节对齐，所以栈空间必须是4字节倍数 
 	可以使用下列宏 来保证申请的占空间是4字节对齐的 使用RT-Thread的宏*/
 #define THREAD_STACK_ALLOC(name,size)			char name[RT_ALIGN(size,RT_ALIGN_SIZE)]
@@ -37,5 +41,17 @@
 #define THREAD_CHECK_STARTUP(thread)			if(thread!=RT_NULL)	rt_thread_startup(thread)
 /* 直接申请的全局变量，使用 rt_thread_init初始化即可，然后启动*/
 #define THREAD_STARTUP(thread)						rt_thread_startup(thread)
+
+
+/*----------------------------------------------------Debugger------------------------------------------------------------*/
+#define user_log(logger,format,...)				if(logger) rt_kprintf("[USER]["#logger"][Log]: "format"\r\n", ##__VA_ARGS__)
+#define user_err(logger,format,...)				if(logger) rt_kprintf("[USER]["#logger"][Error][%s:%4d]: "format"\r\n", SHORT_FILE, __LINE__, ##__VA_ARGS__)
+#define user_waring(logger,format,...)		if(logger) rt_kprintf("[USER]["#logger"][Waring]: "format"\r\n", ##__VA_ARGS__)
+
+#define NUCLEO_BOARD			1
+
+#define APP_INIT					1
+
+
 
 #endif

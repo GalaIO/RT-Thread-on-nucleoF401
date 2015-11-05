@@ -250,18 +250,18 @@ rt_err_t dmp_device_register(const char* name)
 {
 	
 	nrf2401_device.type 				= RT_Device_Class_Block;
-	nrf2401_device.rx_indicate 	= RT_NULL;
-	nrf2401_device.tx_complete 	= RT_NULL;
+	nrf2401_device.rx_indicate 			= RT_NULL;
+	nrf2401_device.tx_complete 			= RT_NULL;
 	nrf2401_device.init 				= nrf2401_device_init;
 	nrf2401_device.open					= RT_NULL;
 	nrf2401_device.close				= RT_NULL;
 	nrf2401_device.read 				= nrf2401_device_read;
 	nrf2401_device.write 				= nrf2401_device_write;
-	nrf2401_device.control 			= nrf2401_device_control;
-	nrf2401_device.user_data		= (void *)&userData;
+	nrf2401_device.control 				= nrf2401_device_control;
+	nrf2401_device.user_data			= (void *)&userData;
 
 	/* register a character device with DEACTIVATE*/
-	return rt_device_register(&nrf2401_device, name, RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_DEACTIVATE);
+	return rt_device_register(&nrf2401_device, name, RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_DEACTIVATE | RT_DEVICE_FLAG_RDCOLLISION);
 }
 
 #endif

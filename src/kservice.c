@@ -515,11 +515,11 @@ RTM_EXPORT(rt_strdup);
  */
 void rt_show_version(void)
 {
-    rt_kprintf("\n \\ | /\n");
-    rt_kprintf("- RT -     Thread Operating System\n");
-    rt_kprintf(" / | \\     %d.%d.%d build %s\n",
+    rt_kprintf("\r\n \\ | /\r\n");
+    rt_kprintf("- RT -     Thread Operating System\r\n");
+    rt_kprintf(" / | \\     %d.%d.%d build %s\r\n",
                RT_VERSION, RT_SUBVERSION, RT_REVISION, __DATE__);
-    rt_kprintf(" 2006 - 2013 Copyright by rt-thread team\n");
+    rt_kprintf(" 2006 - 2013 Copyright by rt-thread team\r\n");
 }
 RTM_EXPORT(rt_show_version);
 
@@ -1078,8 +1078,9 @@ rt_device_t rt_console_set_device(const char *name)
         }
 
         /* set new console device */
+				//@addGalaIO, 先打开再赋值，否则会导致调试错误等。
+        rt_device_open(new, RT_DEVICE_OFLAG_RDWR);
         _console_device = new;
-        rt_device_open(_console_device, RT_DEVICE_OFLAG_RDWR);
     }
 
     return old;

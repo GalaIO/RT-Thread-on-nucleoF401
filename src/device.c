@@ -286,7 +286,7 @@ rt_err_t rt_device_init(rt_device_t dev)
  *函数：打开设备文件，并检验RT_DEVICE_FLAG_ACTIVATED,RT_DEVICE_FLAG_STANDALONE和置RT_DEVICE_OFLAG_OPEN标志位，最后自加设备的计数。
  *流程：1.检查设备文件参数是否为空。
  *		2.判断oflag的属性是否是可读，可写，或者读写，并且不能使别的值，同时比较dev的open_flag是否支持这种 属性。全成立则继续执行，否则返回错误。
- *		3.如果设备没有被激活，同时设备初始化回调函数非空，即初始化设备，并置RT_DEVICE_FLAG_ACTIVATED标志，初始化失败返回，并打印消息。
+ *		3.如果设备没有被激活，同时设备初始化回调函数非空，即初始化设备，并完成3个信号量的初始化；并置RT_DEVICE_FLAG_ACTIVATED标志，初始化失败返回，并打印消息。
  *		4.如果该设备是独占设备，且已经被打开，那么返回设备忙。
  *		5.调用设备open回调函数执行，对返回值检查，open成功后（返回RT_EOK），则置标志量RT_DEVICE_OFLAG_OPEN，同时自加设备的计数dev->ref_count++;返回。
  *
@@ -347,6 +347,20 @@ rt_err_t rt_device_open(rt_device_t dev, rt_uint16_t oflag)
 									return RT_ENOMEM;
 							}
 					  }
+						/*@added GalaIO, if the device is set RT_DEVICE_FLAG_RDCOLLISION, then init the colli_sem, rather just ignore.*/
+						if(dev->colli_sem == RT_NULL && dev->flag & RT_DEVICE_FLAG_RDCOLLISION){
+							/*@added GalaIO, if the device is deactived, then alloc a sem for the device.*/
+							/*@added GalaIO, aync the read and write and sem inited by 1*/
+							dev->colli_sem = rt_sem_create(dev->parent.name,1,RT_IPC_FLAG_PRIO);
+							/*@added GalaIO, if device->colli_sem, not change the flag, return right now.*/
+							if (dev->tx_sem == RT_NULL)
+							{
+									rt_kprintf("To initialize device:%s failed. no more mem for colli_sem\n",
+														 dev->parent.name);
+
+									return RT_ENOMEM;
+							}
+					  }
             result = dev->init(dev);
             if (result != RT_EOK)
             {
@@ -364,7 +378,7 @@ rt_err_t rt_device_open(rt_device_t dev, rt_uint16_t oflag)
     if ((dev->flag & RT_DEVICE_FLAG_STANDALONE) &&
         (dev->open_flag & RT_DEVICE_OFLAG_OPEN))
     {
-				RT_DEBUG_LOG(RT_DEBUG_DEVICE,("%s sorry this is a standalong device, cannot shared it, please waiting!!\r\n",dev->parent.name));
+				RT_DEBUG_LOG(RT_DEBUG_DEVICE,("%s, sorry this is a standalong device, cannot shared it, please waiting!!\r\n",dev->parent.name));
         return -RT_EBUSY;
     }
 
@@ -486,6 +500,11 @@ rt_err_t rt_device_close(rt_device_t dev)
 				if(dev->tx_sem != RT_NULL && dev->flag & RT_DEVICE_FLAG_INT_TX){
 					/*@added GalaIO, if noboby use the device and close callback EOK, then free the Tx_sem*/
 					rt_sem_delete(dev->tx_sem);
+				}
+				/*@added GalaIO, if the device is RT_DEVICE_FLAG_RDCOLLISION mode, delete it.*/
+				if(dev->tx_sem != RT_NULL && dev->flag & RT_DEVICE_FLAG_RDCOLLISION){
+					/*@added GalaIO, if noboby use the device and close callback EOK, then free the colli_sem*/
+					rt_sem_delete(dev->colli_sem);
 				}
 				/*@added GalaIO, and toogle the device status ---- active*/
 				dev->flag &= ~RT_DEVICE_FLAG_ACTIVATED;
@@ -623,7 +642,16 @@ rt_size_t rt_device_read(rt_device_t dev,
     /* call device read interface */
     if (dev->read != RT_NULL)
     {
-        return dev->read(dev, pos, buffer, size);
+				/*@added GalaIO, aync the read and write*/
+				rt_size_t size;
+				if(dev->flag & RT_DEVICE_FLAG_RDCOLLISION){
+						rt_sem_take(dev->colli_sem,RT_WAITING_FOREVER);
+				}	
+        size = dev->read(dev, pos, buffer, size);
+				if(dev->flag & RT_DEVICE_FLAG_RDCOLLISION){
+						rt_sem_release(dev->colli_sem);
+				}	
+				return size;
     }
 
     /* set error code */
@@ -676,7 +704,15 @@ rt_size_t rt_device_write(rt_device_t dev,
     /* call device write interface */
     if (dev->write != RT_NULL)
     {
-        return dev->write(dev, pos, buffer, size);
+				/*@added GalaIO, aync the read and write*/
+				if(dev->flag & RT_DEVICE_FLAG_RDCOLLISION){
+						rt_sem_take(dev->colli_sem,RT_WAITING_FOREVER);
+				}	
+        size = dev->write(dev, pos, buffer, size);
+				if(dev->flag & RT_DEVICE_FLAG_RDCOLLISION){
+						rt_sem_release(dev->colli_sem);
+				}	
+				return size;
     }
 
     /* set error code */

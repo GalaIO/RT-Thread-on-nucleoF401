@@ -31,7 +31,7 @@
 #endif
 
 #ifndef RT_RTC_DEVICE
-#define RT_RTC_DEVICE  								 1
+#define RT_RTC_DEVICE  								 0
 #endif
 
 #ifndef RT_DMP_DEVICE
@@ -39,7 +39,7 @@
 #endif
 
 #ifndef RT_NRF2401_DEVICE
-#define RT_NRF2401_DEVICE  						 1
+#define RT_NRF2401_DEVICE  						 0
 #endif
 
 /* Turn on some of these (set to non-zero) to debug kernel */
@@ -85,7 +85,7 @@
 
 /* Turn on this to enable context check */
 #ifndef RT_DEBUG_CONTEXT_CHECK
-#define RT_DEBUG_CONTEXT_CHECK         1
+#define RT_DEBUG_CONTEXT_CHECK         0
 #endif
 
 #define RT_DEBUG_LOG(type, message)                                           \

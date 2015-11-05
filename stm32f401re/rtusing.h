@@ -58,10 +58,16 @@
 //#endif
 //#endif
 
-#define RT_USING_SPI1
-#if defined(RT_USING_SPI1)
-#define RT_USING_NRF2401
+//#define RT_USING_SPI1
+//#if defined(RT_USING_SPI1)
+//#define RT_USING_NRF2401
+//#endif
+
+#define RT_USING_SPI3
+#if defined(RT_USING_SPI3)
+#define RT_USING_ENC28J60
 #endif
+
 #endif
 
 

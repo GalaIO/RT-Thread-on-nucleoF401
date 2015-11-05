@@ -767,6 +767,8 @@ enum rt_device_class_type
 #define RT_DEVICE_FLAG_ACTIVATED        0x010           /**< device is activated */
 #define RT_DEVICE_FLAG_SUSPENDED        0x020           /**< device is suspended */
 #define RT_DEVICE_FLAG_STREAM           0x040           /**< stream mode */
+/*@added GalaIO, add the read wrie collision detect*/
+#define RT_DEVICE_FLAG_RDCOLLISION      0x080           /**< read and write collision */
 
 #define RT_DEVICE_FLAG_INT_RX           0x100           /**< INT mode on Rx */
 #define RT_DEVICE_FLAG_DMA_RX           0x200           /**< DMA mode on Rx */
@@ -819,6 +821,9 @@ struct rt_device
 
 		/*@added GalaIO, add rt_sem_t for device to get data from TX*/
 		rt_sem_t									tx_sem;										/** sem for noticing TX*/
+	
+		/*@added GalaIO, add rt_sem_t for forbid the collision of RD*/
+		rt_sem_t									colli_sem;								/** sem for forbiding the collision of RD*/
 	
     /* device call back */
     rt_err_t (*rx_indicate)(rt_device_t dev, rt_size_t size);
